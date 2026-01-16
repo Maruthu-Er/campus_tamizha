@@ -1,4 +1,4 @@
-// ============= App.jsx (Main Component with Layout) =============
+// ============= App.jsx =============
 import { useState, useEffect } from 'react';
 import AdminLoginPage from './AdminLoginPage/AdminLoginPage';
 import Header from './Header/Header';
@@ -12,29 +12,28 @@ function App() {
   const [authToken, setAuthToken] = useState(null);
   const [currentPage, setCurrentPage] = useState('applications');
   const [selectedAppId, setSelectedAppId] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  // useEffect(() => {
-  //   // Check if user is already logged in
-  //   const token = localStorage.getItem('access_token');
-  //   if (token) {
-  //     setIsAuthenticated(true);
-  //   }
-  // }, []);
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      darkMode ? 'dark' : 'light'
+    );
+  }, [darkMode]);
 
-   const handleLogin = (tokens) => {
+  const handleLogin = (tokens) => {
     setAuthToken(tokens.accessToken);
     setIsAuthenticated(true);
     setCurrentPage('applications');
   };
 
   const handleLogout = () => {
-    setAuthToken(null); // CHANGE THIS
+    setAuthToken(null);
     setIsAuthenticated(false);
     setCurrentPage('applications');
     setSelectedAppId(null);
-    // REMOVE localStorage calls
   };
 
   const handleViewApplication = (id) => {
@@ -47,10 +46,6 @@ function App() {
     setSelectedAppId(null);
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -60,30 +55,29 @@ function App() {
   }
 
   return (
-    <div className={`admin-layout ${darkMode ? 'dark' : 'light'}`}>
+    <div className="admin-layout">
       <Header 
         onLogout={handleLogout} 
-        toggleSidebar={toggleSidebar}
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
       />
       
       <div className="layout-container">
         <Sidebar 
-          isOpen={sidebarOpen}
           currentPage={currentPage}
           onNavigate={(page) => {
             setCurrentPage(page);
             setSelectedAppId(null);
           }}
+          onExpandChange={setSidebarExpanded}
         />
         
-        <main className={`main-content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+        <main className={`main-content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
           {currentPage === 'applications' && (
-             <ApplicationListPage 
+            <ApplicationListPage 
               onViewApplication={handleViewApplication}
               darkMode={darkMode}
-              authToken={authToken} // ADD THIS
+              authToken={authToken}
             />
           )}
           
@@ -92,8 +86,29 @@ function App() {
               applicationId={selectedAppId}
               onBack={handleBackToList}
               darkMode={darkMode}
-              authToken={authToken} // ADD THIS
+              authToken={authToken}
             />
+          )}
+          
+          {currentPage === 'dashboard' && (
+            <div className="page-placeholder">
+              <h2>Dashboard</h2>
+              <p>Dashboard content coming soon...</p>
+            </div>
+          )}
+          
+          {currentPage === 'analytics' && (
+            <div className="page-placeholder">
+              <h2>Analytics</h2>
+              <p>Analytics content coming soon...</p>
+            </div>
+          )}
+          
+          {currentPage === 'settings' && (
+            <div className="page-placeholder">
+              <h2>Settings</h2>
+              <p>Settings content coming soon...</p>
+            </div>
           )}
         </main>
       </div>

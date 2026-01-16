@@ -1,0 +1,708 @@
+/* ============= EditApplicationModal.css ============= */
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ========== MODAL OVERLAY ========== */
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeInOverlay 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== MODAL CONTENT ========== */
+.edit-modal-content {
+  background: var(--bg-primary);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 950px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 32px 80px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(99, 102, 241, 0.1);
+  animation: slideUpModal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+/* ========== MODAL HEADER ========== */
+.edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.08) 0%,
+    rgba(168, 85, 247, 0.08) 50%,
+    rgba(236, 72, 153, 0.08) 100%
+  );
+  border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+  flex-shrink: 0;
+}
+
+.edit-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.edit-modal-title svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2.5;
+  color: var(--brand-primary);
+  animation: fadeIn 0.6s ease 0.2s both;
+}
+
+.edit-modal-title h3 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-mid),
+    var(--bg-gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+  margin: 0;
+  animation: fadeIn 0.6s ease 0.3s both;
+}
+
+.edit-close-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--error-text);
+}
+
+.edit-close-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.edit-close-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--error-text);
+  transform: scale(1.05);
+}
+
+.edit-close-btn:hover svg {
+  transform: rotate(90deg);
+}
+
+.edit-close-btn:active {
+  transform: scale(0.95);
+}
+
+/* ========== MODAL BODY ========== */
+.edit-modal-body {
+  padding: 40px;
+  overflow-y: auto;
+  flex: 1;
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+.edit-modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.edit-modal-body::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.edit-modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-mid)
+  );
+  border-radius: 10px;
+  border: 2px solid var(--bg-secondary);
+  transition: background 0.3s ease;
+}
+
+.edit-modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    var(--bg-gradient-mid),
+    var(--bg-gradient-end)
+  );
+}
+
+/* ========== ERROR BANNER ========== */
+.edit-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-radius: 16px;
+  margin-bottom: 32px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+  animation: slideInError 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), shake 0.5s ease 0.4s;
+}
+
+.edit-error-banner svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.5;
+  flex-shrink: 0;
+}
+
+/* ========== SECTIONS ========== */
+.edit-section {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  /* border-bottom: 2px solid; */
+  border-image: linear-gradient(
+    90deg,
+    var(--bg-gradient-start),
+    transparent
+  ) 1;
+  animation: fadeIn 0.6s ease;
+}
+
+.edit-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.edit-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(
+    90deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-mid),
+    transparent
+  ) 1;
+}
+
+.edit-section-header svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5;
+  color: var(--brand-primary);
+}
+
+.edit-section-header h4 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+/* ========== GRID ========== */
+.edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* ========== FORM FIELDS ========== */
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.6s ease;
+}
+
+.edit-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: color 0.3s ease;
+}
+
+.edit-field label svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5;
+  color: var(--brand-primary);
+  transition: transform 0.3s ease;
+}
+
+.edit-field:focus-within label {
+  color: var(--brand-primary);
+}
+
+.edit-field:focus-within label svg {
+  transform: scale(1.1);
+}
+
+.required {
+  color: var(--error-text);
+  font-weight: 700;
+  margin-left: auto;
+  font-size: 14px;
+}
+
+/* ========== INPUTS ========== */
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid var(--input-border);
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.edit-input::placeholder,
+.edit-textarea::placeholder {
+  color: var(--input-placeholder);
+  font-weight: 500;
+}
+
+.edit-input:hover,
+.edit-textarea:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.edit-input:focus,
+.edit-textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 4px var(--input-focus-shadow);
+  transform: translateY(-2px);
+}
+
+.edit-input.error,
+.edit-textarea.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  animation: shake 0.4s ease;
+}
+
+.edit-input.error:focus,
+.edit-textarea.error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+}
+
+
+/* Container for the input and the absolute dropdown */
+.searchable-container {
+  position: relative;
+  width: 100%;
+}
+
+/* The Suggestions Dropdown */
+.suggestions-list {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 2px solid var(--brand-primary);
+  border-radius: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.suggestions-list li {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.suggestions-list li:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--brand-primary);
+  padding-left: 25px;
+}
+
+/* Custom scrollbar for the suggestion list */
+.suggestions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 10px;
+}
+
+/* Ensure the field doesn't overlap other elements */
+.edit-field {
+  position: relative;
+}
+
+/* ========== SELECT WRAPPER ========== */
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper select {
+  appearance: none;
+  padding-right: 50px;
+  margin-bottom:1rem ;
+  cursor: pointer;
+}
+
+.select-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.select-wrapper:hover .select-icon {
+  color: var(--brand-primary);
+}
+
+.edit-field:focus-within .select-icon {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--brand-primary);
+}
+
+/* ========== TEXTAREA ========== */
+.edit-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+  font-family: inherit;
+}
+
+/* ========== FIELD ERROR ========== */
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--error-text);
+  font-size: 13px;
+  font-weight: 600;
+  animation: slideInError 0.3s ease;
+}
+
+.field-error::before {
+  content: '⚠';
+  font-size: 14px;
+}
+
+/* ========== MODAL FOOTER ========== */
+.edit-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 18px 32px;
+  background: var(--bg-secondary);
+  border-top: 2px solid rgba(99, 102, 241, 0.15);
+  flex-shrink: 0;
+}
+
+.edit-cancel-btn,
+.edit-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3px;
+}
+
+.edit-cancel-btn svg,
+.edit-save-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+}
+
+.edit-cancel-btn {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--brand-primary);
+  border: 2px solid var(--brand-primary);
+}
+
+.edit-cancel-btn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+}
+
+.edit-save-btn {
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-mid)
+  );
+  color: white;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+}
+
+.edit-save-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
+}
+
+.edit-cancel-btn:active,
+.edit-save-btn:active {
+  transform: translateY(-1px);
+}
+
+.edit-cancel-btn:disabled,
+.edit-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========== BUTTON SPINNER ========== */
+.btn-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 1024px) {
+  .edit-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-modal-content {
+    max-width: 95%;
+    max-height: 95vh;
+    border-radius: 24px;
+  }
+  
+  .edit-modal-header {
+    padding: 18px 24px;
+  }
+  
+  .edit-modal-title h3 {
+    font-size: 24px;
+  }
+  
+  .edit-modal-title svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .edit-close-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .edit-modal-body {
+    padding: 28px;
+  }
+  
+  .edit-section {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+  }
+  
+  .edit-section-header {
+    margin-bottom: 20px;
+  }
+  
+  .edit-section-header h4 {
+    font-size: 20px;
+  }
+  
+  .edit-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .edit-modal-footer {
+    padding: 16px 24px;
+    flex-direction: column-reverse;
+  }
+  
+  .edit-cancel-btn,
+  .edit-save-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-modal-overlay {
+    padding: 0;
+  }
+  
+  .edit-modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .edit-modal-header {
+    padding: 20px;
+    border-radius: 0;
+  }
+  
+  .edit-modal-title h3 {
+    font-size: 20px;
+  }
+  
+  .edit-modal-title svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .edit-modal-body {
+    padding: 20px;
+  }
+  
+  .edit-section-header h4 {
+    font-size: 18px;
+  }
+  
+  .edit-section-header svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .edit-field label {
+    font-size: 12px;
+  }
+  
+  .edit-input,
+  .edit-textarea {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  
+  .edit-modal-footer {
+    padding: 16px 20px;
+    border-radius: 0;
+  }
+  
+  .edit-cancel-btn,
+  .edit-save-btn {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+}
+
+/* ========== DARK MODE SUPPORT ========== */
+@media (prefers-color-scheme: dark) {
+  .edit-modal-overlay {
+    background: rgba(0, 0, 0, 0.85);
+  }
+}
