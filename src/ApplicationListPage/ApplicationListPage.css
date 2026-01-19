@@ -223,16 +223,6 @@
   box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
-.search-hint {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  font-size: 12px;
-  color: var(--brand-primary);
-  font-weight: 500;
-  animation: hintFadeIn 0.3s ease;
-}
-
 .search-loading {
   position: absolute;
   right: 16px;
@@ -342,7 +332,8 @@
   height: 16px;
 }
 
-.filter-item select {
+.filter-item select,
+.filter-input {
   height: 48px;
   padding: 0 16px;
   background: var(--input-bg);
@@ -356,10 +347,52 @@
   box-sizing: border-box;
 }
 
-.filter-item select:focus {
+.filter-input {
+  cursor: text;
+}
+
+.date-input {
+  cursor: pointer;
+}
+
+.filter-item select:focus,
+.filter-input:focus {
   outline: none;
   border-color: var(--brand-primary);
   box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.clear-dates-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  height: 48px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.clear-dates-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.clear-dates-button:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+.clear-dates-button:active {
+  transform: translateY(0);
 }
 
 /* ===== LOADING STATE ===== */
@@ -744,7 +777,7 @@
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   
   .controls-panel {
@@ -758,11 +791,17 @@
   
   .filters-group {
     width: 100%;
+    flex-direction: column;
   }
   
   .filter-item {
-    flex: 1;
-    min-width: 120px;
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .clear-dates-button {
+    width: 100%;
+    justify-content: center;
   }
   
   .pagination-container {
@@ -805,13 +844,5 @@
   
   .stat-value {
     font-size: 28px;
-  }
-  
-  .filters-group {
-    flex-direction: column;
-  }
-  
-  .filter-item {
-    width: 100%;
   }
 }

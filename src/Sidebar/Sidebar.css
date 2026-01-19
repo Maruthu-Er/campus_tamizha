@@ -9,9 +9,11 @@
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(99, 102, 241, 0.1);
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 999;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.collapsed {
@@ -22,27 +24,14 @@
   width: 260px;
 }
 
-/* .sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    var(--bg-gradient-start) 0%,
-    var(--bg-gradient-mid) 50%,
-    var(--bg-gradient-end) 100%
-  );
-  opacity: 0.6;
-} */
-
 .sidebar-nav {
   padding: 24px 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .nav-item {
@@ -111,6 +100,10 @@
   color: var(--brand-primary);
 }
 
+.nav-item:active {
+  transform: translateX(2px) scale(0.98);
+}
+
 .nav-item.active {
   color: var(--brand-primary);
   background: linear-gradient(
@@ -166,6 +159,26 @@
   transform: translateX(0);
 }
 
+/* Mobile sidebar overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
 /* Dark mode specific styles */
 [data-theme="dark"] .sidebar {
   background: rgba(15, 15, 35, 0.95);
@@ -173,20 +186,304 @@
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .sidebar.collapsed {
-    width: 0;
-    border: none;
+[data-theme="dark"] .sidebar-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Sidebar Footer - Powered by Troudz */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.05) 0%,
+    transparent 100%
+  );
+  margin-top: auto;
+}
+
+[data-theme="dark"] .sidebar-footer {
+  border-top: 1px solid rgba(99, 102, 241, 0.15);
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.08) 0%,
+    transparent 100%
+  );
+}
+
+.troudz-logo {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+  /* background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-end) 100%
+  ); */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  transition: all 0.3s ease;
+}
+
+.troudz-logo img {
+  width: 25px;
+  height: 25px;
+}
+
+.sidebar:hover .troudz-logo,
+.sidebar.expanded .troudz-logo {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+}
+
+.troudz-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.troudz-text strong {
+  color: var(--brand-primary);
+  font-weight: 700;
+  background:  linear-gradient(to bottom right, #006cfc, #00dde8);;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.troudz-text.hide {
+  opacity: 0;
+  transform: translateX(-10px);
+  pointer-events: none;
+}
+
+.troudz-text.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ========== TABLET RESPONSIVE (1024px and below) ========== */
+@media (max-width: 1024px) {
+  .sidebar {
+    top: 65px;
   }
-  
+
+  .sidebar.collapsed {
+    width: 70px;
+  }
+
   .sidebar.expanded {
     width: 240px;
   }
+
+  .nav-item {
+    height: 52px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .nav-icon {
+    min-width: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+  }
+
+  .troudz-logo {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+  }
+
+  .troudz-logo svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .troudz-text {
+    font-size: 12px;
+  }
 }
 
-@media (max-width: 480px) {
+/* ========== TABLET/MOBILE RESPONSIVE (768px and below) ========== */
+@media (max-width: 768px) {
+  .sidebar {
+    top: 60px;
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
+
   .sidebar.expanded {
-    width: 200px;
+    transform: translateX(0);
+    width: 260px !important;
+  }
+
+  .sidebar-overlay {
+    top: 60px;
+  }
+
+  .nav-item {
+    height: 56px;
+    padding: 0 20px;
+  }
+
+  .nav-item:hover {
+    transform: translateX(0);
+  }
+
+  .nav-item:active {
+    transform: scale(0.98);
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .nav-label {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+  }
+
+  /* Better touch targets */
+  .nav-item {
+    min-height: 56px;
+  }
+}
+
+/* ========== MOBILE RESPONSIVE (480px and below) ========== */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 240px !important;
+  }
+
+  .sidebar.mobile-open,
+  .sidebar.expanded {
+    width: 240px !important;
+  }
+
+  .nav-item {
+    height: 52px;
+    padding: 0 16px;
+    font-size: 14px;
+    gap: 14px;
+  }
+
+  .nav-icon {
+    min-width: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebar-nav {
+    padding: 20px 0;
+    gap: 4px;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+  }
+
+  .troudz-logo {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .troudz-logo svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .troudz-text {
+    font-size: 12px;
+  }
+}
+
+/* ========== EXTRA SMALL MOBILE (360px and below) ========== */
+@media (max-width: 360px) {
+  .sidebar {
+    width: 200px !important;
+  }
+
+  .sidebar.mobile-open,
+  .sidebar.expanded {
+    width: 200px !important;
+  }
+
+  .nav-item {
+    height: 48px;
+    padding: 0 14px;
+    font-size: 13px;
+    gap: 12px;
+  }
+
+  .nav-icon {
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .sidebar-nav {
+    padding: 16px 0;
+  }
+
+  .sidebar-footer {
+    padding: 14px;
+  }
+
+  .troudz-logo {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .troudz-logo svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .troudz-text {
+    font-size: 11px;
+  }
+}
+
+/* Smooth scrolling for sidebar on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
   }
 }

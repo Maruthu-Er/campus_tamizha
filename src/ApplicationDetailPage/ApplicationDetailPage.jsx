@@ -1,6 +1,8 @@
 // ============= src/ApplicationDetailPage/ApplicationDetailPage.jsx =============
 import { useState, useEffect } from 'react';
 import EditApplicationModal from '../EditApplicationModal/EditApplicationModal';
+import StatusHistoryPanel from '../StatusHistoryPanel/StatusHistoryPanel';
+import ModernDropdown from '../ui/ModernDropdown/ModernDropdown';
 import './ApplicationDetailPage.css';
 
 const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) => {
@@ -8,6 +10,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
   const [loading, setLoading] = useState(true);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showStatusHistory, setShowStatusHistory] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [adminName, setAdminName] = useState('');
@@ -84,10 +87,10 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
     setErrorMessage('');
     
     try {
-      const noteWithName = `[${adminName.trim()}] ${adminNotes.trim()}`;
       const params = new URLSearchParams({
         status_update: selectedStatus,
-        admin_notes: noteWithName
+        admin_name: adminName.trim(),
+        admin_notes: adminNotes.trim()
       });
 
       const response = await fetch(`http://localhost:8000/api/applications/${applicationId}?${params}`, {
@@ -105,7 +108,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
         setAdminName('');
         setAdminNotes('');
         setFormErrors({});
-        setSuccessMessage('Status and admin notes updated successfully!');
+        setSuccessMessage('Status updated successfully!');
         setTimeout(() => setSuccessMessage(''), 4000);
       } else {
         const errorData = await response.json();
@@ -212,12 +215,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
         </button>
         <div className="header-info">
           <h1>Application Details</h1>
-          <p className="app-id">
-            {/* <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-            </svg> */}
-            ID: #{application.id}
-          </p>
+          <p className="app-id">ID: #{application.id}</p>
         </div>
       </div>
 
@@ -258,6 +256,12 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
             </div>
           </div>
           <div className="action-buttons-detail">
+            <button className="action-btn history-btn" onClick={() => setShowStatusHistory(true)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              View History
+            </button>
             <button className="action-btn status-btn" onClick={() => setShowStatusModal(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -307,8 +311,16 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
               <InfoItem icon={<BoardIcon />} label="Board" value={application.board} />
               <InfoItem icon={<CalendarIcon />} label="Year" value={application.year} />
               <InfoItem icon={<PercentIcon />} label="Percentage" value={`${application.percentage}%`} />
-              <InfoItem icon={<CollegeIcon />} label="College" value={application.college} />
-              <InfoItem icon={<CourseIcon />} label="Course" value={application.course} />
+              <ListInfoItem 
+                icon={<CollegeIcon />} 
+                label="Colleges" 
+                items={application.college || []} 
+              />
+              <ListInfoItem 
+                icon={<CourseIcon />} 
+                label="Courses" 
+                items={application.course || []} 
+              />
               <InfoItem icon={<CalendarIcon />} label="Admission Year" value={application.admission_year} />
             </div>
           </div>
@@ -335,13 +347,6 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
               <h3>Application Status & Timeline</h3>
             </div>
             <div className="info-grid">
-              {/* <div className="info-item full-width">
-                <label>Current Status</label>
-                <div className="status-badge-large" style={{ background: statusConfig.gradient }}>
-                  {statusConfig.icon}
-                  {statusConfig.label}
-                </div>
-              </div> */}
               <InfoItem 
                 icon={<CalendarIcon />} 
                 label="Created Date" 
@@ -383,7 +388,15 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
         onSuccess={handleEditSuccess}
       />
 
-      {/* Status Update Modal with Mandatory Admin Notes */}
+      {/* Status History Panel */}
+      <StatusHistoryPanel
+        show={showStatusHistory}
+        onClose={() => setShowStatusHistory(false)}
+        applicationId={applicationId}
+        authToken={authToken}
+      />
+
+      {/* Status Update Modal */}
       {showStatusModal && (
         <div className="modal-overlay" onClick={() => setShowStatusModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -402,7 +415,30 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
             </div>
 
             <div className="modal-body">
-              <div className="form-group">
+
+<ModernDropdown
+  label="Select Status"
+  value={selectedStatus}
+  options={[
+    { value: 'pending', label: 'Pending' },
+    { value: 'under_review', label: 'Under Review' },
+    { value: 'accepted', label: 'Accepted' },
+    { value: 'rejected', label: 'Rejected' }
+  ]}
+  onChange={(value) => {
+    setSelectedStatus(value);
+    setFormErrors({...formErrors, status: ''});
+  }}
+  placeholder="Select status"
+  icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+  </svg>}
+  required
+  error={formErrors.status}
+/>
+
+
+              {/* <div className="form-group">
                 <label>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -423,7 +459,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
                   <option value="rejected">Rejected</option>
                 </select>
                 {formErrors.status && <span className="error-text">{formErrors.status}</span>}
-              </div>
+              </div> */}
 
               <div className="form-group">
                 <label>
@@ -451,7 +487,6 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   Admin Notes *
-                  {/* <span className="required-badge">Mandatory</span> */}
                 </label>
                 <textarea
                   value={adminNotes}
@@ -527,6 +562,25 @@ const InfoItem = ({ icon, label, value, capitalize }) => (
       {label}
     </label>
     <p className={capitalize ? 'capitalize' : ''}>{value}</p>
+  </div>
+);
+const ListInfoItem = ({ icon, label, items }) => (
+  <div className="info-item">
+    <label>
+      {icon}
+      {label}
+    </label>
+    <div className="list-items-container">
+      {items && items.length > 0 ? (
+        items.map((item, index) => (
+          <span key={index} className="list-item-badge">
+            {item}
+          </span>
+        ))
+      ) : (
+        <p className="no-items">No {label.toLowerCase()} specified</p>
+      )}
+    </div>
   </div>
 );
 

@@ -991,7 +991,7 @@
   }
 
   .info-grid {
-    grid-template-columns: 1fr;
+    /* grid-template-columns: 1fr; */
     gap: 20px;
   }
 
@@ -1010,3 +1010,102 @@
   .modal-body {
     padding: 24px;
   }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ============= Additional CSS for ApplicationDetailPage.css ============= */
+/* Add these new styles to your existing ApplicationDetailPage.css file */
+
+/* List Items Container for Colleges and Courses */
+.list-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--input-bg);
+  border-radius: 12px;
+  border: 2px solid var(--input-border);
+  transition: all 0.3s ease;
+  min-height: 56px;
+}
+
+.list-items-container:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
+}
+
+.list-item-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(168, 85, 247, 0.1) 100%
+  );
+  color: var(--text-primary);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.list-item-badge:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.2) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.no-items {
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-style: italic;
+  margin: 0;
+}
+
+/* History Button Styling */
+.history-btn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+}
+
+.history-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+/* Responsive adjustments for list items */
+@media (max-width: 768px) {
+  .list-items-container {
+    gap: 8px;
+  }
+
+  .list-item-badge {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}

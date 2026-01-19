@@ -1,4 +1,3 @@
-// ============= ApplicationListPage.jsx =============
 import { useState, useEffect, useCallback } from 'react';
 import './ApplicationListPage.css';
 
@@ -10,6 +9,9 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('created_at');
   const [order, setOrder] = useState('desc');
@@ -27,8 +29,12 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
         limit: 100,
         sort_by: sortBy,
         order: order,
-        search: searchQuery
       });
+
+      if (searchQuery) params.append('name', searchQuery);
+      if (locationFilter) params.append('location', locationFilter);
+      if (startDate) params.append('start_date', startDate);
+      if (endDate) params.append('end_date', endDate);
 
       const response = await fetch(`http://localhost:8000/api/applications/?${params}`, {
         method: 'GET',
@@ -58,36 +64,40 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
         setIsSearching(false);
       }
     }
-  }, [authToken, sortBy, order]);
+  }, [authToken, sortBy, order, locationFilter, startDate, endDate]);
 
-  useEffect(() => {
-    // Trigger search only if searchTerm has 3+ characters or is empty
-    if (searchTerm.length === 0 || searchTerm.length >= 3) {
-      const delayDebounceFn = setTimeout(() => {
-        fetchApplications(searchTerm);
-      }, 500);
+ useEffect(() => {
+  // Now it triggers for 0 (clear) or any length greater than 0
+  const delayDebounceFn = setTimeout(() => {
+    fetchApplications(searchTerm);
+  }, 500);
 
-      return () => clearTimeout(delayDebounceFn);
-    }
-  }, [searchTerm, fetchApplications]);
+  return () => clearTimeout(delayDebounceFn);
+}, [searchTerm, fetchApplications]);
 
-  // Initial load
   useEffect(() => {
     fetchApplications('', true);
   }, []);
 
-  // Re-fetch when sort changes
   useEffect(() => {
     if (!loading) {
       fetchApplications(searchTerm);
     }
-  }, [sortBy, order]);
+  }, [sortBy, order, locationFilter, startDate, endDate]);
 
   const handleRefresh = () => {
     setSearchTerm('');
     setFilterStatus('all');
+    setLocationFilter('');
+    setStartDate('');
+    setEndDate('');
     setCurrentPage(1);
     fetchApplications('', false);
+  };
+
+  const handleClearDateFilters = () => {
+    setStartDate('');
+    setEndDate('');
   };
 
   const handleSuggestionClick = (name) => {
@@ -105,12 +115,8 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
   };
 
   const filteredApplications = applications.filter(app => {
-    const matchesSearch = 
-      app.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.city?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterStatus === 'all' || app.status === filterStatus;
-    return matchesSearch && matchesFilter;
+    return matchesFilter;
   });
 
   const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
@@ -148,7 +154,6 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
 
   return (
     <div className="list-page">
-      {/* Header Section */}
       <div className="page-header-section">
         <div className="header-content">
           <div className="header-title-group">
@@ -164,7 +169,6 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
@@ -221,7 +225,6 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
         </div>
       </div>
 
-      {/* Controls Panel */}
       <div className="controls-panel">
         <div className="search-container">
           <div className="search-wrapper">
@@ -231,7 +234,7 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
             </svg>
             <input
               type="text"
-              placeholder="Search by name, email, or city..."
+              placeholder="Search by name..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -267,6 +270,23 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
           <div className="filter-item">
             <label>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              Location
+            </label>
+            <input
+              type="text"
+              placeholder="Filter by city..."
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+
+          <div className="filter-item">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M12 6v6l4 2"/>
               </svg>
@@ -280,10 +300,55 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
               <option value="rejected">Rejected</option>
             </select>
           </div>
+
+          <div className="filter-item">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Start Date
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="filter-input date-input"
+            />
+          </div>
+
+          <div className="filter-item">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              End Date
+            </label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="filter-input date-input"
+            />
+          </div>
+
+          {(startDate || endDate) && (
+            <button className="clear-dates-button" onClick={handleClearDateFilters}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              Clear Dates
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Content Area */}
       {loading ? (
         <div className="loading-container">
           <div className="spinner-ring"></div>

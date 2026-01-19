@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import ModernDropdown from '../ui/ModernDropdown/ModernDropdown';
 import './EditApplicationModal.css';
 const EditApplicationModal = ({ 
   show, 
@@ -92,28 +93,24 @@ const EditApplicationModal = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (application) {
-      setEditForm({
-        name: application.name || '',
-        email: application.email || '',
-        mobile: application.mobile || '',
-        city: application.city || '',
-        dob: application.dob || '',
-        gender: application.gender || '',
-        qualification: application.qualification || '',
-        board: application.board || '',
-        year: application.year || '',
-        percentage: application.percentage || '',
-        college: application.college || '',
-        course: application.course || '',
-        admission_year: application.admission_year || '',
-        notes: application.notes || '',
-        status: application.status || 'pending',
-        admin_notes: application.admin_notes || ''
-      });
-    }
-  }, [application]);
+ useEffect(() => {
+  if (application) {
+    setEditForm({
+      ...application, // Spread existing fields
+      // Convert arrays to strings for the input fields
+      college: Array.isArray(application.college) 
+        ? application.college.join(', ') 
+        : (application.college || ''),
+      course: Array.isArray(application.course) 
+        ? application.course.join(', ') 
+        : (application.course || ''),
+      // Ensure other numbers are handled
+      year: application.year || '',
+      admission_year: application.admission_year || '',
+      percentage: application.percentage || ''
+    });
+  }
+}, [application]);
 
   const handleChange = (field, value) => {
     setEditForm(prev => ({
@@ -211,20 +208,25 @@ const EditApplicationModal = ({
     
     try {
       const updateData = {
-        ...editForm,
-        year: editForm.year ? parseInt(editForm.year) : null,
-        percentage: editForm.percentage ? parseFloat(editForm.percentage) : null,
-        admission_year: editForm.admission_year ? parseInt(editForm.admission_year) : null
-      };
+      ...editForm,
+      // Convert comma-separated string back to Array
+      college: editForm.college.split(',').map(item => item.trim()).filter(item => item !== ""),
+      course: editForm.course.split(',').map(item => item.trim()).filter(item => item !== ""),
+      
+      // Convert strings back to numbers for the DB
+      year: editForm.year ? parseInt(editForm.year) : null,
+      percentage: editForm.percentage ? parseFloat(editForm.percentage) : null,
+      admission_year: editForm.admission_year ? parseInt(editForm.admission_year) : null
+    };
 
-      const response = await fetch(`http://localhost:8000/api/applications/${application.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData)
-      });
+       const response = await fetch(`http://localhost:8000/api/applications/${application.id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updateData)
+    });
 
       if (response.ok) {
         const updatedApp = await response.json();
@@ -388,7 +390,25 @@ const EditApplicationModal = ({
                 {getFieldError('dob') && <span className="field-error">{getFieldError('dob')}</span>}
               </div>
 
-              <div className="edit-field">
+
+              <ModernDropdown
+  label="Gender"
+  value={editForm.gender}
+  options={[
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' }
+  ]}
+  onChange={(value) => handleChange('gender', value)}
+  placeholder="Select Gender"
+  icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+  </svg>}
+  required
+  error={getFieldError('gender')}
+/>
+
+              {/* <div className="edit-field">
                 <label>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -413,7 +433,7 @@ const EditApplicationModal = ({
                   </svg>
                 </div>
                 {getFieldError('gender') && <span className="field-error">{getFieldError('gender')}</span>}
-              </div>
+              </div> */}
             </div>
           </div>
 

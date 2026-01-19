@@ -1,18 +1,42 @@
 // ============= Sidebar.jsx =============
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import logo from '../assets/logo/favicon.ico';
 import './Sidebar.css';
 
-const Sidebar = ({ currentPage, onNavigate, onExpandChange }) => {
+const Sidebar = ({ currentPage, onNavigate, onExpandChange, mobileOpen, onMobileClose }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
-    onExpandChange?.(true);
+    if (!isMobile) {
+      setIsHovered(true);
+      onExpandChange?.(true);
+    }
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    onExpandChange?.(false);
+    if (!isMobile) {
+      setIsHovered(false);
+      onExpandChange?.(false);
+    }
+  };
+
+  const handleNavClick = (itemId) => {
+    onNavigate(itemId);
+    if (isMobile && onMobileClose) {
+      onMobileClose();
+    }
   };
 
   const menuItems = [
@@ -64,27 +88,52 @@ const Sidebar = ({ currentPage, onNavigate, onExpandChange }) => {
   ];
 
   return (
-    <aside 
-      className={`sidebar ${isHovered ? 'expanded' : 'collapsed'}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <nav className="sidebar-nav">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
-            onClick={() => onNavigate(item.id)}
-            title={!isHovered ? item.label : ''}
-          >
-            <span className="nav-icon">{item.icon}</span>
-            <span className={`nav-label ${isHovered ? 'show' : 'hide'}`}>
-              {item.label}
-            </span>
-          </button>
-        ))}
-      </nav>
-    </aside>
+    <>
+      {/* Mobile overlay */}
+      {isMobile && (
+        <div 
+          className={`sidebar-overlay ${mobileOpen ? 'show' : ''}`}
+          onClick={onMobileClose}
+        />
+      )}
+
+      <aside 
+        className={`sidebar ${
+          isMobile 
+            ? (mobileOpen ? 'mobile-open expanded' : 'collapsed') 
+            : (isHovered ? 'expanded' : 'collapsed')
+        }`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <nav className="sidebar-nav">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
+              title={!isHovered && !isMobile ? item.label : ''}
+              aria-label={item.label}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              <span className={`nav-label ${(isHovered || isMobile) ? 'show' : 'hide'}`}>
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </nav>
+
+        {/* Powered by Troudz */}
+        <div className="sidebar-footer">
+          <div className="troudz-logo">
+            <img src={logo} alt='' />
+          </div>
+          <span className={`troudz-text ${(isHovered || isMobile) ? 'show' : 'hide'}`}>
+            Powered by <strong>Troudz</strong>
+          </span>
+        </div>
+      </aside>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ function App() {
   const [selectedAppId, setSelectedAppId] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Apply theme to document
   useEffect(() => {
@@ -22,6 +23,18 @@ function App() {
       darkMode ? 'dark' : 'light'
     );
   }, [darkMode]);
+
+  // Close mobile sidebar when screen size changes to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogin = (tokens) => {
     setAuthToken(tokens.accessToken);
@@ -34,6 +47,7 @@ function App() {
     setIsAuthenticated(false);
     setCurrentPage('applications');
     setSelectedAppId(null);
+    setMobileSidebarOpen(false);
   };
 
   const handleViewApplication = (id) => {
@@ -50,6 +64,14 @@ function App() {
     setDarkMode(!darkMode);
   };
 
+  const toggleMobileSidebar = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen);
+  };
+
+  const closeMobileSidebar = () => {
+    setMobileSidebarOpen(false);
+  };
+
   if (!isAuthenticated) {
     return <AdminLoginPage onLogin={handleLogin} />;
   }
@@ -60,6 +82,8 @@ function App() {
         onLogout={handleLogout} 
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
+        onMenuToggle={toggleMobileSidebar}
+        mobileMenuOpen={mobileSidebarOpen}
       />
       
       <div className="layout-container">
@@ -70,6 +94,8 @@ function App() {
             setSelectedAppId(null);
           }}
           onExpandChange={setSidebarExpanded}
+          mobileOpen={mobileSidebarOpen}
+          onMobileClose={closeMobileSidebar}
         />
         
         <main className={`main-content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>

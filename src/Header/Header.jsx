@@ -1,10 +1,29 @@
 // ============= Header.jsx =============
 import './Header.css';
 
-const Header = ({ onLogout, darkMode, toggleDarkMode }) => {
+const Header = ({ onLogout, darkMode, toggleDarkMode, onMenuToggle, mobileMenuOpen }) => {
   return (
     <header className="admin-header">
       <div className="header-left">
+        <button 
+          className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
+          onClick={onMenuToggle}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {mobileMenuOpen ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          )}
+        </button>
+
         <div className="logo">
           <div className="logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -25,7 +44,12 @@ const Header = ({ onLogout, darkMode, toggleDarkMode }) => {
           <span className="notification-badge">3</span>
         </button>
 
-        <button className="icon-btn theme-toggle-btn" onClick={toggleDarkMode} title={darkMode ? "Light Mode" : "Dark Mode"}>
+        <button 
+          className="icon-btn theme-toggle-btn" 
+          onClick={toggleDarkMode} 
+          title={darkMode ? "Light Mode" : "Dark Mode"}
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+        >
           {darkMode ? (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="5"/>
@@ -58,7 +82,7 @@ const Header = ({ onLogout, darkMode, toggleDarkMode }) => {
           </div>
         </div>
         
-        <button className="logout-btn" onClick={onLogout}>
+        <button className="logout-btn" onClick={onLogout} aria-label="Logout">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16 17 21 12 16 7"/>
