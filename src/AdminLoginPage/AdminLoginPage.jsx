@@ -16,7 +16,7 @@ const AdminLoginPage = ({ onLogin }) => {
     if (!email) newErrors.email = "Email is required"
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid"
     if (!password) newErrors.password = "Password is required"
-    else if (password.length < 6) newErrors.password = "Password must be at least 6 characters"
+    else if (password.length < 4) newErrors.password = "Password must be at least 6 characters"
     return newErrors
   }
 
@@ -31,7 +31,7 @@ const AdminLoginPage = ({ onLogin }) => {
     setLoading(true)
 
     try {
-      const response = await fetch("http://localhost:8000/api/auth/login", {
+      const response = await fetch("https://campus-tamizha.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -61,7 +61,7 @@ const AdminLoginPage = ({ onLogin }) => {
       {/* Left side - Gradient background with content */}
       <div className="admin-login-left">
         <div className="admin-login-left-content">
-          <h2>Welcome to website</h2>
+          <h2>Campus Tamizha</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
             dolore magna aliquam erat volutpat.

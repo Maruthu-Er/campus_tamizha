@@ -219,7 +219,7 @@
 .search-input:focus {
   outline: none;
   background: var(--bg-primary);
-  border-color: var(--brand-primary);
+  /* border-color: var(--brand-primary); */
   box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
@@ -358,8 +358,8 @@
 .filter-item select:focus,
 .filter-input:focus {
   outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+  /* border-color: var(--brand-primary); */
+  box-shadow: 0 0 0 3px var(--input-focus-shadow); 
 }
 
 .clear-dates-button {
@@ -742,7 +742,9 @@
   color: var(--text-secondary);
 }
 
-/* ===== RESPONSIVE ===== */
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* ========== TABLET (1024px and below) ========== */
 @media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -755,81 +757,51 @@
   .modern-table {
     min-width: 900px;
   }
+  
+  .filter-item {
+    min-width: 160px;
+  }
 }
 
+/* ========== TABLET (768px and below) ========== */
 @media (max-width: 768px) {
   .list-page {
     padding: 0;
   }
   
+  .page-header-section {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
   .header-content {
     flex-direction: column;
     align-items: stretch;
+    gap: 16px;
   }
   
   .page-title {
     font-size: 24px;
   }
   
+  .page-subtitle {
+    font-size: 14px;
+  }
+  
   .refresh-button {
     width: 100%;
     justify-content: center;
+    padding: 12px 20px;
   }
   
   .stats-grid {
     grid-template-columns: 1fr 1fr;
-  }
-  
-  .controls-panel {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-container {
-    min-width: 100%;
-  }
-  
-  .filters-group {
-    width: 100%;
-    flex-direction: column;
-  }
-  
-  .filter-item {
-    width: 100%;
-    min-width: 100%;
-  }
-  
-  .clear-dates-button {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .pagination-container {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .pagination-button {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-header-section {
-    padding: 20px;
-  }
-  
-  .page-title {
-    font-size: 20px;
-  }
-  
-  .page-subtitle {
-    font-size: 13px;
+    gap: 12px;
+    margin-bottom: 16px;
   }
   
   .stat-card {
-    padding: 20px;
+    padding: 16px;
   }
   
   .stat-icon {
@@ -844,5 +816,566 @@
   
   .stat-value {
     font-size: 28px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .controls-panel {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .search-container {
+    min-width: 100%;
+  }
+  
+  .filters-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .filter-item {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .clear-dates-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .table-wrapper {
+    margin-bottom: 16px;
+  }
+  
+  .modern-table th,
+  .modern-table td {
+    padding: 14px 12px;
+    font-size: 13px;
+  }
+  
+  .applicant-cell {
+    min-width: 200px;
+  }
+  
+  .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  .applicant-name {
+    font-size: 13px;
+  }
+  
+  .applicant-email {
+    font-size: 11px;
+  }
+  
+  .pagination-container {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .pagination-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .pagination-info {
+    order: -1;
+  }
+}
+
+/* ========== MOBILE (480px and below) ========== */
+@media (max-width: 480px) {
+  .page-header-section {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 13px;
+  }
+  
+  .refresh-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .refresh-button svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .stat-card {
+    padding: 14px;
+    gap: 14px;
+  }
+  
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .stat-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  .stat-label {
+    font-size: 10px;
+  }
+  
+  .controls-panel {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .search-input,
+  .filter-input,
+  .filter-item select,
+  .clear-dates-button {
+    height: 44px;
+    font-size: 13px;
+  }
+  
+  .filter-item label {
+    font-size: 11px;
+  }
+  
+  .table-wrapper {
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .modern-table {
+    min-width: 750px;
+  }
+  
+  .modern-table th,
+  .modern-table td {
+    padding: 12px 10px;
+    font-size: 12px;
+  }
+  
+  .id-cell {
+    font-size: 11px;
+  }
+  
+  .applicant-cell {
+    min-width: 180px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .applicant-name {
+    font-size: 12px;
+  }
+  
+  .applicant-email {
+    font-size: 10px;
+  }
+  
+  .status-tag {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .action-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .action-button svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .pagination-container {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  
+  .pagination-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .pagination-button svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .current-page {
+    font-size: 15px;
+  }
+  
+  .loading-container,
+  .empty-container {
+    padding: 60px 16px;
+  }
+  
+  .empty-container svg {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .empty-container h3 {
+    font-size: 18px;
+  }
+  
+  .empty-container p {
+    font-size: 14px;
+  }
+}
+
+/* ========== EXTRA SMALL MOBILE (360px and below) ========== */
+@media (max-width: 360px) {
+  .page-header-section {
+    padding: 14px;
+  }
+  
+  .page-title {
+    font-size: 18px;
+  }
+  
+  .page-subtitle {
+    font-size: 12px;
+  }
+  
+  .refresh-button {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stat-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .stat-value {
+    font-size: 22px;
+  }
+  
+  .controls-panel {
+    padding: 14px;
+    gap: 10px;
+  }
+  
+  .search-input,
+  .filter-input,
+  .filter-item select,
+  .clear-dates-button {
+    height: 42px;
+    font-size: 12px;
+  }
+  
+  .search-icon {
+    width: 18px;
+    height: 18px;
+    left: 14px;
+  }
+  
+  .search-input {
+    padding: 0 14px 0 44px;
+  }
+  
+  .filter-item label {
+    font-size: 10px;
+  }
+  
+  .filter-item label svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .clear-dates-button svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .modern-table {
+    min-width: 700px;
+  }
+  
+  .modern-table th {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+  
+  .modern-table td {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+  
+  .applicant-cell {
+    min-width: 160px;
+  }
+  
+  .applicant-info {
+    gap: 10px;
+  }
+  
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+  
+  .applicant-name {
+    font-size: 11px;
+  }
+  
+  .applicant-email {
+    font-size: 9px;
+  }
+  
+  .location-cell svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .status-tag {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+  
+  .status-icon {
+    font-size: 12px;
+  }
+  
+  .action-button {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  
+  .action-button svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .pagination-button {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+  
+  .pagination-button svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .current-page {
+    font-size: 14px;
+  }
+  
+  .page-separator,
+  .total-pages {
+    font-size: 12px;
+  }
+  
+  .spinner-ring {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .loading-container p {
+    font-size: 14px;
+  }
+  
+  .empty-container svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .empty-container h3 {
+    font-size: 16px;
+  }
+  
+  .empty-container p {
+    font-size: 13px;
+  }
+}
+
+/* ========== TOUCH IMPROVEMENTS FOR MOBILE ========== */
+@media (max-width: 768px) {
+  /* Remove hover effects on mobile */
+  .stat-card:hover {
+    transform: none;
+  }
+  
+  .refresh-button:hover,
+  .action-button:hover,
+  .pagination-button:hover,
+  .clear-dates-button:hover {
+    transform: none;
+  }
+  
+  /* Add active states for better touch feedback */
+  .stat-card:active {
+    transform: scale(0.98);
+  }
+  
+  .refresh-button:active,
+  .action-button:active,
+  .clear-dates-button:active {
+    transform: scale(0.95);
+  }
+  
+  .pagination-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  .modern-table tbody tr:hover {
+    transform: none;
+  }
+  
+  .modern-table tbody tr:active {
+    background: var(--input-bg);
+  }
+  
+  /* Better touch targets */
+  .suggestions-dropdown li {
+    padding: 14px;
+    font-size: 14px;
+  }
+  
+  .suggestions-dropdown li:hover {
+    transform: none;
+  }
+  
+  .suggestions-dropdown li:active {
+    background: var(--input-bg);
+  }
+}
+
+/* ========== SCROLLBAR STYLING ========== */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--input-bg);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--input-border);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+.suggestions-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestions-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.suggestions-dropdown::-webkit-scrollbar-thumb {
+  background: var(--input-border);
+  border-radius: 3px;
+}
+
+.suggestions-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* ========== ACCESSIBILITY IMPROVEMENTS ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.search-input:focus-visible,
+.filter-input:focus-visible,
+.filter-item select:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.refresh-button:focus-visible,
+.action-button:focus-visible,
+.pagination-button:focus-visible,
+.clear-dates-button:focus-visible {
+  outline: 2px solid var(--text-white);
+  outline-offset: 2px;
+}
+
+.modern-table tbody tr:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  .page-header-section,
+  .controls-panel,
+  .pagination-container {
+    box-shadow: none !important;
+  }
+  
+  .refresh-button,
+  .action-button,
+  .clear-dates-button {
+    display: none;
+  }
+  
+  .modern-table tbody tr:hover {
+    background: transparent;
+  }
+  
+  .stat-card {
+    break-inside: avoid;
+  }
+  
+  .table-wrapper {
+    overflow: visible;
   }
 }

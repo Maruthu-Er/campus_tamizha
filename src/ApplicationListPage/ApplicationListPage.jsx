@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ApplicationListPage.css';
 
-const ApplicationListPage = ({ onViewApplication, authToken }) => {
+const ApplicationListPage = ({ authToken }) => {
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
@@ -36,7 +38,7 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
       if (startDate) params.append('start_date', startDate);
       if (endDate) params.append('end_date', endDate);
 
-      const response = await fetch(`http://localhost:8000/api/applications/?${params}`, {
+      const response = await fetch(`https://campus-tamizha.onrender.com/api/applications/?${params}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -66,14 +68,13 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
     }
   }, [authToken, sortBy, order, locationFilter, startDate, endDate]);
 
- useEffect(() => {
-  // Now it triggers for 0 (clear) or any length greater than 0
-  const delayDebounceFn = setTimeout(() => {
-    fetchApplications(searchTerm);
-  }, 500);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchApplications(searchTerm);
+    }, 500);
 
-  return () => clearTimeout(delayDebounceFn);
-}, [searchTerm, fetchApplications]);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, fetchApplications]);
 
   useEffect(() => {
     fetchApplications('', true);
@@ -112,6 +113,10 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
       setSortBy(field);
       setOrder('asc');
     }
+  };
+
+  const handleViewApplication = (id) => {
+    navigate(`/applications/${id}`);
   };
 
   const filteredApplications = applications.filter(app => {
@@ -380,10 +385,9 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
                       <SortIcon field="name" />
                     </div>
                   </th>
-                  <th onClick={() => handleSort('mobile')} className="sortable">
+                  <th>
                     <div className="th-content">
                       <span>Contact</span>
-                      <SortIcon field="mobile" />
                     </div>
                   </th>
                   <th onClick={() => handleSort('city')} className="sortable">
@@ -411,7 +415,7 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
                 {paginatedApplications.map((app) => {
                   const statusConfig = getStatusConfig(app.status);
                   return (
-                    <tr key={app.id} onClick={() => onViewApplication(app.id)}>
+                    <tr key={app.id} onClick={() => handleViewApplication(app.id)}>
                       <td className="id-cell">#{app.id}</td>
                       <td className="applicant-cell">
                         <div className="applicant-info">
@@ -456,7 +460,7 @@ const ApplicationListPage = ({ onViewApplication, authToken }) => {
                           className="action-button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            onViewApplication(app.id);
+                            handleViewApplication(app.id);
                           }}
                         >
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

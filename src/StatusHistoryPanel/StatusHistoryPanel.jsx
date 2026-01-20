@@ -17,7 +17,7 @@ const StatusHistoryPanel = ({ show, onClose, applicationId, authToken }) => {
     setError('');
     try {
       const response = await fetch(
-        `http://localhost:8000/api/applications/${applicationId}/status-history`,
+        `https://campus-tamizha.onrender.com/api/applications/${applicationId}/status-history`,
         {
           method: 'GET',
           headers: {

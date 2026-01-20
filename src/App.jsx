@@ -1,5 +1,5 @@
-// ============= App.jsx =============
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import AdminLoginPage from './AdminLoginPage/AdminLoginPage';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
@@ -7,11 +7,23 @@ import ApplicationListPage from './ApplicationListPage/ApplicationListPage';
 import ApplicationDetailPage from './ApplicationDetailPage/ApplicationDetailPage';
 import './App.css';
 
+// Wrapper component for ApplicationDetailPage to handle URL params
+const ApplicationDetailWrapper = ({ darkMode, authToken, onBack }) => {
+  const { id } = useParams();
+  return (
+    <ApplicationDetailPage 
+      applicationId={id}
+      onBack={onBack}
+      darkMode={darkMode}
+      authToken={authToken}
+    />
+  );
+};
+
 function App() {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState(null);
-  const [currentPage, setCurrentPage] = useState('applications');
-  const [selectedAppId, setSelectedAppId] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -39,25 +51,22 @@ function App() {
   const handleLogin = (tokens) => {
     setAuthToken(tokens.accessToken);
     setIsAuthenticated(true);
-    setCurrentPage('applications');
+    navigate('/applications');
   };
 
   const handleLogout = () => {
     setAuthToken(null);
     setIsAuthenticated(false);
-    setCurrentPage('applications');
-    setSelectedAppId(null);
     setMobileSidebarOpen(false);
+    navigate('/login');
   };
 
   const handleViewApplication = (id) => {
-    setSelectedAppId(id);
-    setCurrentPage('detail');
+    navigate(`/applications/${id}`);
   };
 
   const handleBackToList = () => {
-    setCurrentPage('applications');
-    setSelectedAppId(null);
+    navigate('/applications');
   };
 
   const toggleDarkMode = () => {
@@ -73,7 +82,12 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return <AdminLoginPage onLogin={handleLogin} />;
+    return (
+      <Routes>
+        <Route path="/login" element={<AdminLoginPage onLogin={handleLogin} />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
   }
 
   return (
@@ -88,54 +102,69 @@ function App() {
       
       <div className="layout-container">
         <Sidebar 
-          currentPage={currentPage}
-          onNavigate={(page) => {
-            setCurrentPage(page);
-            setSelectedAppId(null);
-          }}
+          onNavigate={(page) => navigate(`/${page}`)}
           onExpandChange={setSidebarExpanded}
           mobileOpen={mobileSidebarOpen}
           onMobileClose={closeMobileSidebar}
         />
         
         <main className={`main-content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
-          {currentPage === 'applications' && (
-            <ApplicationListPage 
-              onViewApplication={handleViewApplication}
-              darkMode={darkMode}
-              authToken={authToken}
+          <Routes>
+            <Route 
+              path="/applications" 
+              element={
+                <ApplicationListPage 
+                  onViewApplication={handleViewApplication}
+                  darkMode={darkMode}
+                  authToken={authToken}
+                />
+              } 
             />
-          )}
-          
-          {currentPage === 'detail' && selectedAppId && (
-            <ApplicationDetailPage 
-              applicationId={selectedAppId}
-              onBack={handleBackToList}
-              darkMode={darkMode}
-              authToken={authToken}
+            
+            <Route 
+              path="/applications/:id" 
+              element={
+                <ApplicationDetailWrapper 
+                  onBack={handleBackToList}
+                  darkMode={darkMode}
+                  authToken={authToken}
+                />
+              } 
             />
-          )}
-          
-          {currentPage === 'dashboard' && (
-            <div className="page-placeholder">
-              <h2>Dashboard</h2>
-              <p>Dashboard content coming soon...</p>
-            </div>
-          )}
-          
-          {currentPage === 'analytics' && (
-            <div className="page-placeholder">
-              <h2>Analytics</h2>
-              <p>Analytics content coming soon...</p>
-            </div>
-          )}
-          
-          {currentPage === 'settings' && (
-            <div className="page-placeholder">
-              <h2>Settings</h2>
-              <p>Settings content coming soon...</p>
-            </div>
-          )}
+            
+            <Route 
+              path="/dashboard" 
+              element={
+                <div className="page-placeholder">
+                  <h2>Dashboard</h2>
+                  <p>Dashboard content coming soon...</p>
+                </div>
+              } 
+            />
+            
+            <Route 
+              path="/analytics" 
+              element={
+                <div className="page-placeholder">
+                  <h2>Analytics</h2>
+                  <p>Analytics content coming soon...</p>
+                </div>
+              } 
+            />
+            
+            <Route 
+              path="/settings" 
+              element={
+                <div className="page-placeholder">
+                  <h2>Settings</h2>
+                  <p>Settings content coming soon...</p>
+                </div>
+              } 
+            />
+            
+            <Route path="/" element={<Navigate to="/applications" replace />} />
+            <Route path="*" element={<Navigate to="/applications" replace />} />
+          </Routes>
         </main>
       </div>
     </div>

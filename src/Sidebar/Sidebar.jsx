@@ -1,11 +1,24 @@
-// ============= Sidebar.jsx =============
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import logo from '../assets/logo/favicon.ico';
 import './Sidebar.css';
 
-const Sidebar = ({ currentPage, onNavigate, onExpandChange, mobileOpen, onMobileClose }) => {
+const Sidebar = ({ onNavigate, onExpandChange, mobileOpen, onMobileClose }) => {
+  const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Determine current page from URL
+  const getCurrentPage = () => {
+    const path = location.pathname;
+    if (path.startsWith('/applications')) return 'applications';
+    if (path === '/dashboard') return 'dashboard';
+    if (path === '/analytics') return 'analytics';
+    if (path === '/settings') return 'settings';
+    return 'applications';
+  };
+
+  const currentPage = getCurrentPage();
 
   useEffect(() => {
     const checkMobile = () => {

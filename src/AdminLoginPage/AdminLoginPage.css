@@ -26,14 +26,27 @@
   max-width: 500px;
 }
 
-.admin-login-left h2 {
-  color: var(--text-white);
+.admin-login-left-content h2 {
   font-size: 48px;
   font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  color: var(--text-white);
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+  text-transform: capitalize;
 }
 
+/* The Decorative Underline */
+.admin-login-left-content h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 60px;
+  height: 5px;
+  background: linear-gradient(90deg, var(--bg-gradient-mid), var(--bg-gradient-end));
+  border-radius: 10px;
+}
 .admin-login-left p {
   color: var(--text-white-transparent);
   font-size: 16px;

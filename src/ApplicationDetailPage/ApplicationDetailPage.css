@@ -332,7 +332,6 @@
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  /* animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); */
   transition: all 0.3s ease;
 }
 
@@ -458,6 +457,16 @@
   box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
 }
 
+.history-btn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+}
+
+.history-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
 .action-btn:active {
   transform: translateY(-1px);
 }
@@ -563,6 +572,59 @@
   text-transform: capitalize;
 }
 
+/* ========== LIST ITEMS CONTAINER ========== */
+.list-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--input-bg);
+  border-radius: 12px;
+  border: 2px solid var(--input-border);
+  transition: all 0.3s ease;
+  min-height: 56px;
+}
+
+.list-items-container:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
+}
+
+.list-item-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(168, 85, 247, 0.1) 100%
+  );
+  color: var(--text-primary);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.list-item-badge:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.2) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.no-items {
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-style: italic;
+  margin: 0;
+}
+
 /* ========== NOTES CONTAINER ========== */
 .notes-container {
   background: var(--input-bg);
@@ -583,27 +645,6 @@
   line-height: 1.8;
   white-space: pre-wrap;
   word-break: break-word;
-}
-
-/* ========== STATUS BADGE LARGE ========== */
-.status-badge-large {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 28px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: white;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  letter-spacing: 0.8px;
-}
-
-.status-badge-large .status-icon {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2.5;
 }
 
 /* ========== ADMIN NOTES SECTION ========== */
@@ -743,19 +784,6 @@
   height: 18px;
   stroke-width: 2.5;
   color: var(--brand-primary);
-}
-
-.required-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-left: auto;
 }
 
 .form-input,
@@ -933,179 +961,322 @@
 }
 
 /* ========== RESPONSIVE DESIGN ========== */
+
+/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
   .info-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
+
+  .card-body-detail {
+    padding: 32px;
+  }
 }
 
+/* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+  /* Page Header */
   .page-header-detail {
     flex-direction: column;
     align-items: flex-start;
-    padding: 24px;
+    padding: 20px;
     gap: 16px;
   }
 
   .header-info h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
+  .app-id {
+    font-size: 13px;
+  }
+
+  /* Card Header */
   .card-header-detail {
     flex-direction: column;
     align-items: flex-start;
-    padding: 28px 24px;
-  }
-
-  .header-title-section {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  .applicant-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  .title-info h2 {
-    font-size: 26px;
-  }
-
-  .action-buttons-detail {
-    width: 100%;
-  }
-
-  .action-btn {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .card-body-detail {
-    padding: 28px 24px;
-  }
-
-  .section-header h3 {
-    font-size: 20px;
-  }
-
-  .info-grid {
-    /* grid-template-columns: 1fr; */
+    padding: 24px 20px;
     gap: 20px;
   }
 
+  .header-title-section {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .applicant-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  .title-info {
+    flex: 1;
+  }
+
+  .title-info h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .status-badge {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  /* Action Buttons */
+  .action-buttons-detail {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  /* Card Body */
+  .card-body-detail {
+    padding: 24px 20px;
+  }
+
+  .section-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+
+  .section-header svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .section-header h3 {
+    font-size: 18px;
+  }
+
+  /* Info Grid */
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .info-item p {
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+
+  .list-items-container {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+
+  .list-item-badge {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    padding: 16px;
+  }
+
   .modal-content {
-    max-width: 95%;
+    max-width: 100%;
+    max-height: 85vh;
   }
 
   .modal-header {
-    padding: 24px;
+    padding: 20px;
+    flex-wrap: wrap;
+  }
+
+  .modal-title {
+    gap: 10px;
+  }
+
+  .modal-title svg {
+    width: 24px;
+    height: 24px;
   }
 
   .modal-title h3 {
     font-size: 20px;
   }
 
+  .close-btn {
+    width: 36px;
+    height: 36px;
+  }
+
   .modal-body {
-    padding: 24px;
-  }}
+    padding: 20px;
+  }
 
+  .form-group {
+    margin-bottom: 20px;
+  }
 
+  .form-group label {
+    font-size: 13px;
+  }
 
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
 
+  .modal-footer {
+    padding: 20px;
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
 
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
 
+  /* Notes Container */
+  .notes-container {
+    padding: 20px;
+  }
 
+  .notes-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /* ============= Additional CSS for ApplicationDetailPage.css ============= */
-/* Add these new styles to your existing ApplicationDetailPage.css file */
-
-/* List Items Container for Colleges and Courses */
-.list-items-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 16px 20px;
-  background: var(--input-bg);
-  border-radius: 12px;
-  border: 2px solid var(--input-border);
-  transition: all 0.3s ease;
-  min-height: 56px;
+  .admin-notes-box {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
 }
 
-.list-items-container:hover {
-  border-color: var(--brand-primary);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
-  transform: translateY(-2px);
-}
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .page-header-detail {
+    padding: 16px;
+  }
 
-.list-item-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.1) 0%,
-    rgba(168, 85, 247, 0.1) 100%
-  );
-  color: var(--text-primary);
-  border: 2px solid rgba(99, 102, 241, 0.2);
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
+  .header-info h1 {
+    font-size: 20px;
+  }
 
-.list-item-badge:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.2) 0%,
-    rgba(168, 85, 247, 0.2) 100%
-  );
-  border-color: rgba(99, 102, 241, 0.4);
-  transform: translateY(-2px);
-}
+  .back-btn {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
 
-.no-items {
-  color: var(--text-secondary);
-  font-size: 15px;
-  font-style: italic;
-  margin: 0;
-}
+  .card-header-detail {
+    padding: 20px 16px;
+  }
 
-/* History Button Styling */
-.history-btn {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-  color: white;
-}
+  .title-info h2 {
+    font-size: 20px;
+  }
 
-.history-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
-}
+  .applicant-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
 
-/* Responsive adjustments for list items */
-@media (max-width: 768px) {
-  .list-items-container {
+  .card-body-detail {
+    padding: 20px 16px;
+  }
+
+  .section-header h3 {
+    font-size: 17px;
+  }
+
+  .action-btn {
+    padding: 10px 16px;
     gap: 8px;
   }
 
+  .action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hide button text on very small screens, show only icons */
+  .action-btn .btn-text {
+    display: none;
+  }
+
+  .action-buttons-detail {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 8px;
+  }
+
+  .notification-banner {
+    padding: 14px 16px;
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  .notification-banner svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-title h3 {
+    font-size: 18px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    padding: 16px;
+  }
+
+  .info-item p {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
   .list-item-badge {
-    font-size: 13px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
+/* Extra responsive adjustments */
+@media (max-width: 360px) {
+  .header-info h1 {
+    font-size: 18px;
+  }
+
+  .title-info h2 {
+    font-size: 18px;
+  }
+
+  .section-header h3 {
+    font-size: 16px;
+  }
+
+  .status-badge {
+    font-size: 11px;
     padding: 6px 12px;
   }
 }

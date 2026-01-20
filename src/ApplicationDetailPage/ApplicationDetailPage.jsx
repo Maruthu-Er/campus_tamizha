@@ -1,11 +1,14 @@
-// ============= src/ApplicationDetailPage/ApplicationDetailPage.jsx =============
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import EditApplicationModal from '../EditApplicationModal/EditApplicationModal';
 import StatusHistoryPanel from '../StatusHistoryPanel/StatusHistoryPanel';
 import ModernDropdown from '../ui/ModernDropdown/ModernDropdown';
 import './ApplicationDetailPage.css';
 
-const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) => {
+const ApplicationDetailPage = ({ darkMode, authToken }) => {
+  const { id } = useParams(); // Get ID from URL params
+  const navigate = useNavigate();
+  
   const [application, setApplication] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -13,20 +16,22 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
   const [showStatusHistory, setShowStatusHistory] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
-  const [adminName, setAdminName] = useState('');
+  // const [adminName, setAdminName] = useState('');
   const [saving, setSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
-    fetchApplicationDetail();
-  }, [applicationId]);
+    if (id) {
+      fetchApplicationDetail();
+    }
+  }, [id]);
 
   const fetchApplicationDetail = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/applications/${applicationId}`, {
+      const response = await fetch(`https://campus-tamizha.onrender.com/api/applications/${id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -40,6 +45,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
         setSelectedStatus(data.status || 'pending');
       } else if (response.status === 401) {
         alert('Session expired. Please log in again.');
+        navigate('/login');
       } else if (response.status === 404) {
         setErrorMessage('Application not found');
       }
@@ -51,6 +57,10 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
     }
   };
 
+  const handleBack = () => {
+    navigate('/applications');
+  };
+
   const handleEditSuccess = (updatedApp) => {
     setApplication(updatedApp);
     setSuccessMessage('Application updated successfully!');
@@ -58,68 +68,67 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
   };
 
   const validateStatusForm = () => {
-    const errors = {};
-    
-    if (!selectedStatus) {
-      errors.status = 'Please select a status';
-    }
-    
-    if (!adminName.trim()) {
-      errors.adminName = 'Your name is required';
-    }
+  const errors = {};
+  
+  if (!selectedStatus) {
+    errors.status = 'Please select a status';
+  }
     
     if (!adminNotes.trim()) {
-      errors.adminNotes = 'Admin notes are mandatory for status updates';
-    } else if (adminNotes.trim().length < 10) {
-      errors.adminNotes = 'Please provide at least 10 characters of notes';
-    }
-    
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    errors.adminNotes = 'Admin notes are mandatory for status updates';
+  } else if (adminNotes.trim().length < 10) {
+    errors.adminNotes = 'Please provide at least 10 characters of notes';
+  }
+  
+  setFormErrors(errors);
+  return Object.keys(errors).length === 0;
+};
+
 
   const handleStatusUpdate = async () => {
-    if (!validateStatusForm()) {
-      return;
-    }
+  if (!validateStatusForm()) {
+    return;
+  }
 
-    setSaving(true);
-    setErrorMessage('');
-    
-    try {
-      const params = new URLSearchParams({
-        status_update: selectedStatus,
-        admin_name: adminName.trim(),
-        admin_notes: adminNotes.trim()
-      });
+  setSaving(true);
+  setErrorMessage('');
+  
+  try {
+    // FIXED: Only send status_update and admin_notes (no admin_name!)
+    const params = new URLSearchParams({
+      status_update: selectedStatus,
+      admin_notes: adminNotes.trim()
+    });
 
-      const response = await fetch(`http://localhost:8000/api/applications/${applicationId}?${params}`, {
+    const response = await fetch(
+      `https://campus-tamizha.onrender.com/api/applications/${id}?${params}`, 
+      {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         }
-      });
-
-      if (response.ok) {
-        const updatedApp = await response.json();
-        setApplication(updatedApp);
-        setShowStatusModal(false);
-        setAdminName('');
-        setAdminNotes('');
-        setFormErrors({});
-        setSuccessMessage('Status updated successfully!');
-        setTimeout(() => setSuccessMessage(''), 4000);
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.detail || 'Failed to update status');
       }
-    } catch (err) {
-      setErrorMessage('Network error. Please try again.');
-    } finally {
-      setSaving(false);
+    );
+
+    if (response.ok) {
+      const updatedApp = await response.json();
+      setApplication(updatedApp);
+      setShowStatusModal(false);
+      setAdminNotes(''); // Clear notes
+      setFormErrors({});
+      setSuccessMessage('Status updated successfully!');
+      setTimeout(() => setSuccessMessage(''), 4000);
+    } else {
+      const errorData = await response.json();
+      setErrorMessage(errorData.detail || 'Failed to update status');
     }
-  };
+  } catch (err) {
+    setErrorMessage('Network error. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+};
 
   const getStatusConfig = (status) => {
     const configs = {
@@ -190,7 +199,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
           </svg>
           <h3>Error Loading Application</h3>
           <p>{errorMessage}</p>
-          <button onClick={onBack} className="back-btn-error">
+          <button onClick={handleBack} className="back-btn-error">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -207,7 +216,7 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
     <div className="detail-page">
       {/* Header */}
       <div className="page-header-detail">
-        <button className="back-btn" onClick={onBack}>
+        <button className="back-btn" onClick={handleBack}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -260,19 +269,19 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              View History
+              <span className="btn-text">View History</span>
             </button>
             <button className="action-btn status-btn" onClick={() => setShowStatusModal(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
-              Update Status
+              <span className="btn-text">Update Status</span>
             </button>
             <button className="action-btn edit-btn" onClick={() => setShowEditModal(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              Edit Application
+              <span className="btn-text">Edit Application</span>
             </button>
           </div>
         </div>
@@ -298,32 +307,32 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
           </div>
 
           {/* Education Background */}
-          <div className="info-section">
-            <div className="section-header">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-              </svg>
-              <h3>Education Background</h3>
-            </div>
-            <div className="info-grid">
-              <InfoItem icon={<AcademicIcon />} label="Qualification" value={application.qualification} />
-              <InfoItem icon={<BoardIcon />} label="Board" value={application.board} />
-              <InfoItem icon={<CalendarIcon />} label="Year" value={application.year} />
-              <InfoItem icon={<PercentIcon />} label="Percentage" value={`${application.percentage}%`} />
-              <ListInfoItem 
-                icon={<CollegeIcon />} 
-                label="Colleges" 
-                items={application.college || []} 
-              />
-              <ListInfoItem 
-                icon={<CourseIcon />} 
-                label="Courses" 
-                items={application.course || []} 
-              />
-              <InfoItem icon={<CalendarIcon />} label="Admission Year" value={application.admission_year} />
-            </div>
-          </div>
+         <div className="info-section">
+  <div className="section-header">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+    </svg>
+    <h3>Education Background</h3>
+  </div>
+  <div className="info-grid">
+    <InfoItem icon={<AcademicIcon />} label="School Name" value={application.school_name} />
+    <InfoItem icon={<BoardIcon />} label="Board" value={application.board} />
+    <InfoItem icon={<LocationIcon />} label="District" value={application.district} />
+    <InfoItem icon={<PercentIcon />} label="SSLC Percentage" value={`${application.sslc_percentage}%`} />
+    <InfoItem icon={<PercentIcon />} label="HSC Percentage" value={`${application.hsc_percentage}%`} />
+    <ListInfoItem 
+      icon={<CollegeIcon />} 
+      label="Colleges" 
+      items={application.college || []} 
+    />
+    <ListInfoItem 
+      icon={<CourseIcon />} 
+      label="Courses" 
+      items={application.course || []} 
+    />
+  </div>
+</div>
 
           {/* Additional Information */}
           <div className="info-section">
@@ -392,164 +401,121 @@ const ApplicationDetailPage = ({ applicationId, onBack, darkMode, authToken }) =
       <StatusHistoryPanel
         show={showStatusHistory}
         onClose={() => setShowStatusHistory(false)}
-        applicationId={applicationId}
+        applicationId={id}
         authToken={authToken}
       />
 
       {/* Status Update Modal */}
       {showStatusModal && (
-        <div className="modal-overlay" onClick={() => setShowStatusModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div className="modal-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                </svg>
-                <h3>Update Application Status</h3>
-              </div>
-              <button className="close-btn" onClick={() => setShowStatusModal(false)}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="modal-body">
-
-<ModernDropdown
-  label="Select Status"
-  value={selectedStatus}
-  options={[
-    { value: 'pending', label: 'Pending' },
-    { value: 'under_review', label: 'Under Review' },
-    { value: 'accepted', label: 'Accepted' },
-    { value: 'rejected', label: 'Rejected' }
-  ]}
-  onChange={(value) => {
-    setSelectedStatus(value);
-    setFormErrors({...formErrors, status: ''});
-  }}
-  placeholder="Select status"
-  icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-  </svg>}
-  required
-  error={formErrors.status}
-/>
-
-
-              {/* <div className="form-group">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
-                  Select Status *
-                </label>
-                <select 
-                  value={selectedStatus} 
-                  onChange={(e) => {
-                    setSelectedStatus(e.target.value);
-                    setFormErrors({...formErrors, status: ''});
-                  }}
-                  className={`form-select ${formErrors.status ? 'error' : ''}`}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="under_review">Under Review</option>
-                  <option value="accepted">Accepted</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-                {formErrors.status && <span className="error-text">{formErrors.status}</span>}
-              </div> */}
-
-              <div className="form-group">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  value={adminName}
-                  onChange={(e) => {
-                    setAdminName(e.target.value);
-                    setFormErrors({...formErrors, adminName: ''});
-                  }}
-                  placeholder="Enter your name"
-                  className={`form-input ${formErrors.adminName ? 'error' : ''}`}
-                />
-                {formErrors.adminName && <span className="error-text">{formErrors.adminName}</span>}
-              </div>
-
-              <div className="form-group">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Admin Notes *
-                </label>
-                <textarea
-                  value={adminNotes}
-                  onChange={(e) => {
-                    setAdminNotes(e.target.value);
-                    setFormErrors({...formErrors, adminNotes: ''});
-                  }}
-                  placeholder="Enter detailed notes about this status update... (minimum 10 characters)"
-                  rows="5"
-                  className={`form-textarea ${formErrors.adminNotes ? 'error' : ''}`}
-                />
-                <div className="textarea-footer">
-                  <span className={`char-count ${adminNotes.length < 10 ? 'warning' : 'success'}`}>
-                    {adminNotes.length} / 10 minimum characters
-                  </span>
-                </div>
-                {formErrors.adminNotes && <span className="error-text">{formErrors.adminNotes}</span>}
-              </div>
-
-              <div className="info-box">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p>Admin notes are mandatory for all status updates. Please provide clear and detailed information about this decision.</p>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button 
-                className="btn-secondary" 
-                onClick={() => {
-                  setShowStatusModal(false);
-                  setFormErrors({});
-                }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Cancel
-              </button>
-              <button 
-                className="btn-primary" 
-                onClick={handleStatusUpdate} 
-                disabled={saving}
-              >
-                {saving ? (
-                  <>
-                    <div className="btn-loader"></div>
-                    Updating...
-                  </>
-                ) : (
-                  <>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Update Status
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+  <div className="modal-overlay" onClick={() => setShowStatusModal(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-header">
+        <div className="modal-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </svg>
+          <h3>Update Application Status</h3>
         </div>
-      )}
+        <button className="close-btn" onClick={() => setShowStatusModal(false)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="modal-body">
+        <ModernDropdown
+          label="Select Status"
+          value={selectedStatus}
+          options={[
+            { value: 'pending', label: 'Pending' },
+            { value: 'under_review', label: 'Under Review' },
+            { value: 'accepted', label: 'Accepted' },
+            { value: 'rejected', label: 'Rejected' }
+          ]}
+          onChange={(value) => {
+            setSelectedStatus(value);
+            setFormErrors({...formErrors, status: ''});
+          }}
+          placeholder="Select status"
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </svg>}
+          required
+          error={formErrors.status}
+        />
+
+        {/* REMOVED: Admin Name field - API doesn't accept it */}
+
+        <div className="form-group">
+          <label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Admin Notes *
+          </label>
+          <textarea
+            value={adminNotes}
+            onChange={(e) => {
+              setAdminNotes(e.target.value);
+              setFormErrors({...formErrors, adminNotes: ''});
+            }}
+            placeholder="Enter detailed notes about this status update... (minimum 10 characters)"
+            rows="5"
+            className={`form-textarea ${formErrors.adminNotes ? 'error' : ''}`}
+          />
+          <div className="textarea-footer">
+            <span className={`char-count ${adminNotes.length < 10 ? 'warning' : 'success'}`}>
+              {adminNotes.length} / 10 minimum characters
+            </span>
+          </div>
+          {formErrors.adminNotes && <span className="error-text">{formErrors.adminNotes}</span>}
+        </div>
+
+        <div className="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>Admin notes are mandatory for all status updates. The system will automatically track who made this change and when.</p>
+        </div>
+      </div>
+
+      <div className="modal-footer">
+        <button 
+          className="btn-secondary" 
+          onClick={() => {
+            setShowStatusModal(false);
+            setFormErrors({});
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Cancel
+        </button>
+        <button 
+          className="btn-primary" 
+          onClick={handleStatusUpdate} 
+          disabled={saving}
+        >
+          {saving ? (
+            <>
+              <div className="btn-loader"></div>
+              Updating...
+            </>
+          ) : (
+            <>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Update Status
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

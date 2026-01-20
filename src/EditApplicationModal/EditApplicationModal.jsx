@@ -8,24 +8,24 @@ const EditApplicationModal = ({
   authToken, 
   onSuccess 
 }) => {
-  const [editForm, setEditForm] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    city: '',
-    dob: '',
-    gender: '',
-    qualification: '',
-    board: '',
-    year: '',
-    percentage: '',
-    college: '',
-    course: '',
-    admission_year: '',
-    notes: '',
-    status: '',
-    admin_notes: ''
-  });
+ const [editForm, setEditForm] = useState({
+  name: '',
+  email: '',
+  mobile: '',
+  city: '',
+  dob: '',
+  gender: '',
+  sslc_percentage: '',  // Changed from 'percentage'
+  hsc_percentage: '',   // NEW field
+  school_name: '',      // Changed from 'qualification'
+  district: '',         // NEW field
+  board: '',
+  college: '',          // Will be converted to array
+  course: '',           // Will be converted to array
+  notes: '',
+  status: '',
+  admin_notes: ''
+});
    const [allCities, setAllCities] = useState([]); // Stores the full list from API
   const [filteredCities, setFilteredCities] = useState([]); // Stores filtered results
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -96,18 +96,17 @@ const EditApplicationModal = ({
  useEffect(() => {
   if (application) {
     setEditForm({
-      ...application, // Spread existing fields
-      // Convert arrays to strings for the input fields
+      ...application,
+      // Convert arrays to comma-separated strings for editing
       college: Array.isArray(application.college) 
         ? application.college.join(', ') 
         : (application.college || ''),
       course: Array.isArray(application.course) 
         ? application.course.join(', ') 
         : (application.course || ''),
-      // Ensure other numbers are handled
-      year: application.year || '',
-      admission_year: application.admission_year || '',
-      percentage: application.percentage || ''
+      // Ensure numbers are strings for input fields
+      sslc_percentage: application.sslc_percentage || '',
+      hsc_percentage: application.hsc_percentage || ''
     });
   }
 }, [application]);
@@ -153,97 +152,121 @@ const EditApplicationModal = ({
     return '';
   };
 
-  const validateForm = () => {
-    const requiredFields = [
-      'name', 'email', 'mobile', 'city', 'dob', 'gender',
-      'qualification', 'board', 'year', 'percentage',
-      'college', 'course', 'admission_year'
-    ];
+ const validateForm = () => {
+  const requiredFields = [
+    'name', 'email', 'mobile', 'city', 'dob', 'gender',
+    'school_name', 'district', 'board', 
+    'sslc_percentage', 'hsc_percentage',
+    'college', 'course'
+  ];
 
-    for (const field of requiredFields) {
-      const error = getFieldError(field);
-      if (error) {
-        setError(error);
-        return false;
-      }
-      if (!editForm[field] || editForm[field].toString().trim() === '') {
-        setError(`${field.replace('_', ' ').toUpperCase()} is required`);
-        return false;
-      }
+  for (const field of requiredFields) {
+    const error = getFieldError(field);
+    if (error) {
+      setError(error);
+      return false;
     }
+    if (!editForm[field] || editForm[field].toString().trim() === '') {
+      setError(`${field.replace('_', ' ').toUpperCase()} is required`);
+      return false;
+    }
+  }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(editForm.email)) {
-      setError('Please enter a valid email address');
-      return false;
-    }
+  if (!emailRegex.test(editForm.email)) {
+    setError('Please enter a valid email address');
+    return false;
+  }
+
 
     const mobileRegex = /^\d{10}$/;
-    if (!mobileRegex.test(editForm.mobile)) {
-      setError('Mobile number must be 10 digits');
-      return false;
-    }
+  if (!mobileRegex.test(editForm.mobile)) {
+    setError('Mobile number must be 10 digits');
+    return false;
+  }
 
-    const percentage = parseFloat(editForm.percentage);
-    if (isNaN(percentage) || percentage < 0 || percentage > 100) {
-      setError('Percentage must be between 0 and 100');
-      return false;
-    }
+    const sslcPercent = parseFloat(editForm.sslc_percentage);
+  if (isNaN(sslcPercent) || sslcPercent < 0 || sslcPercent > 100) {
+    setError('SSLC Percentage must be between 0 and 100');
+    return false;
+  }
 
-    return true;
-  };
+  const hscPercent = parseFloat(editForm.hsc_percentage);
+  if (isNaN(hscPercent) || hscPercent < 0 || hscPercent > 100) {
+    setError('HSC Percentage must be between 0 and 100');
+    return false;
+  }
 
-  const handleSubmit = async () => {
-    // Mark all fields as touched
-    const allTouched = {};
-    Object.keys(editForm).forEach(key => allTouched[key] = true);
-    setTouched(allTouched);
+  return true;
+};
 
-    if (!validateForm()) {
-      return;
-    }
 
-    setSaving(true);
-    setError('');
-    
-    try {
-      const updateData = {
-      ...editForm,
-      // Convert comma-separated string back to Array
-      college: editForm.college.split(',').map(item => item.trim()).filter(item => item !== ""),
-      course: editForm.course.split(',').map(item => item.trim()).filter(item => item !== ""),
-      
-      // Convert strings back to numbers for the DB
-      year: editForm.year ? parseInt(editForm.year) : null,
-      percentage: editForm.percentage ? parseFloat(editForm.percentage) : null,
-      admission_year: editForm.admission_year ? parseInt(editForm.admission_year) : null
+ const handleSubmit = async () => {
+  const allTouched = {};
+  Object.keys(editForm).forEach(key => allTouched[key] = true);
+  setTouched(allTouched);
+
+  if (!validateForm()) {
+    return;
+  }
+
+  setSaving(true);
+  setError('');
+  
+  try {
+    const updateData = {
+      name: editForm.name,
+      email: editForm.email,
+      mobile: editForm.mobile,
+      city: editForm.city,
+      dob: editForm.dob,
+      gender: editForm.gender,
+      sslc_percentage: parseFloat(editForm.sslc_percentage),
+      hsc_percentage: parseFloat(editForm.hsc_percentage),
+      school_name: editForm.school_name,
+      district: editForm.district,
+      board: editForm.board,
+      // Convert comma-separated strings to arrays
+      college: editForm.college
+        .split(',')
+        .map(item => item.trim())
+        .filter(item => item !== ''),
+      course: editForm.course
+        .split(',')
+        .map(item => item.trim())
+        .filter(item => item !== ''),
+      notes: editForm.notes || '',
+      status: editForm.status,
+      admin_notes: editForm.admin_notes || ''
     };
 
-       const response = await fetch(`http://localhost:8000/api/applications/${application.id}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updateData)
-    });
-
-      if (response.ok) {
-        const updatedApp = await response.json();
-        onSuccess(updatedApp);
-        onClose();
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Failed to update application');
+    const response = await fetch(
+      `https://campus-tamizha.onrender.com/api/applications/${application.id}`, 
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
       }
-    } catch (err) {
-      console.error('Error updating application:', err);
-      setError('Network error. Please try again.');
-    } finally {
-      setSaving(false);
-    }
-  };
+    );
 
+    if (response.ok) {
+      const updatedApp = await response.json();
+      onSuccess(updatedApp);
+      onClose();
+    } else {
+      const errorData = await response.json();
+      setError(errorData.detail || 'Failed to update application');
+    }
+  } catch (err) {
+    console.error('Error updating application:', err);
+    setError('Network error. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+};
   if (!show) return null;
 
   return (
@@ -439,182 +462,158 @@ const EditApplicationModal = ({
 
           {/* Education Background */}
           <div className="edit-section">
-            <div className="edit-section-header">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-              </svg>
-              <h4>Education Background</h4>
-            </div>
-            
-            <div className="edit-grid">
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Qualification
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={editForm.qualification}
-                  onChange={(e) => handleChange('qualification', e.target.value)}
-                  onBlur={() => handleBlur('qualification')}
-                  className={`edit-input ${getFieldError('qualification') ? 'error' : ''}`}
-                  placeholder="e.g., 12th, Graduation"
-                />
-                {getFieldError('qualification') && <span className="field-error">{getFieldError('qualification')}</span>}
-              </div>
+  <div className="edit-section-header">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+    </svg>
+    <h4>Education Background</h4>
+  </div>
+  
+  <div className="edit-grid">
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        School Name
+        <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        value={editForm.school_name}
+        onChange={(e) => handleChange('school_name', e.target.value)}
+        onBlur={() => handleBlur('school_name')}
+        className={`edit-input ${getFieldError('school_name') ? 'error' : ''}`}
+        placeholder="Enter school name"
+      />
+      {getFieldError('school_name') && <span className="field-error">{getFieldError('school_name')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                  Board
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={editForm.board}
-                  onChange={(e) => handleChange('board', e.target.value)}
-                  onBlur={() => handleBlur('board')}
-                  className={`edit-input ${getFieldError('board') ? 'error' : ''}`}
-                  placeholder="e.g., CBSE, State Board"
-                />
-                {getFieldError('board') && <span className="field-error">{getFieldError('board')}</span>}
-              </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        Board
+        <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        value={editForm.board}
+        onChange={(e) => handleChange('board', e.target.value)}
+        onBlur={() => handleBlur('board')}
+        className={`edit-input ${getFieldError('board') ? 'error' : ''}`}
+        placeholder="e.g., CBSE, State Board"
+      />
+      {getFieldError('board') && <span className="field-error">{getFieldError('board')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Passing Year
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="number"
-                  value={editForm.year}
-                  onChange={(e) => handleChange('year', e.target.value)}
-                  onBlur={() => handleBlur('year')}
-                  className={`edit-input ${getFieldError('year') ? 'error' : ''}`}
-                  placeholder="2024"
-                  min="1950"
-                  max="2030"
-                />
-                {getFieldError('year') && <span className="field-error">{getFieldError('year')}</span>}
-              </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        District
+        <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        value={editForm.district}
+        onChange={(e) => handleChange('district', e.target.value)}
+        onBlur={() => handleBlur('district')}
+        className={`edit-input ${getFieldError('district') ? 'error' : ''}`}
+        placeholder="Enter district"
+      />
+      {getFieldError('district') && <span className="field-error">{getFieldError('district')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  Percentage
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={editForm.percentage}
-                  onChange={(e) => handleChange('percentage', e.target.value)}
-                  onBlur={() => handleBlur('percentage')}
-                  className={`edit-input ${getFieldError('percentage') ? 'error' : ''}`}
-                  placeholder="85.5"
-                  min="0"
-                  max="100"
-                />
-                {getFieldError('percentage') && <span className="field-error">{getFieldError('percentage')}</span>}
-              </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        SSLC Percentage
+        <span className="required">*</span>
+      </label>
+      <input
+        type="number"
+        step="0.01"
+        value={editForm.sslc_percentage}
+        onChange={(e) => handleChange('sslc_percentage', e.target.value)}
+        onBlur={() => handleBlur('sslc_percentage')}
+        className={`edit-input ${getFieldError('sslc_percentage') ? 'error' : ''}`}
+        placeholder="85.5"
+        min="0"
+        max="100"
+      />
+      {getFieldError('sslc_percentage') && <span className="field-error">{getFieldError('sslc_percentage')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                  College
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={editForm.college}
-                  onChange={(e) => handleChange('college', e.target.value)}
-                  onBlur={() => handleBlur('college')}
-                  className={`edit-input ${getFieldError('college') ? 'error' : ''}`}
-                  placeholder="College name"
-                />
-                {getFieldError('college') && <span className="field-error">{getFieldError('college')}</span>}
-              </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        HSC Percentage
+        <span className="required">*</span>
+      </label>
+      <input
+        type="number"
+        step="0.01"
+        value={editForm.hsc_percentage}
+        onChange={(e) => handleChange('hsc_percentage', e.target.value)}
+        onBlur={() => handleBlur('hsc_percentage')}
+        className={`edit-input ${getFieldError('hsc_percentage') ? 'error' : ''}`}
+        placeholder="92.0"
+        min="0"
+        max="100"
+      />
+      {getFieldError('hsc_percentage') && <span className="field-error">{getFieldError('hsc_percentage')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  Course
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={editForm.course}
-                  onChange={(e) => handleChange('course', e.target.value)}
-                  onBlur={() => handleBlur('course')}
-                  className={`edit-input ${getFieldError('course') ? 'error' : ''}`}
-                  placeholder="e.g., B.Tech, BCA"
-                />
-                {getFieldError('course') && <span className="field-error">{getFieldError('course')}</span>}
-              </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        College(s)
+        <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        value={editForm.college}
+        onChange={(e) => handleChange('college', e.target.value)}
+        onBlur={() => handleBlur('college')}
+        className={`edit-input ${getFieldError('college') ? 'error' : ''}`}
+        placeholder="Separate multiple colleges with commas"
+      />
+      <small className="field-hint">Enter multiple colleges separated by commas</small>
+      {getFieldError('college') && <span className="field-error">{getFieldError('college')}</span>}
+    </div>
 
-              <div className="edit-field">
-                <label>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Admission Year
-                  <span className="required">*</span>
-                </label>
-                <input
-                  type="number"
-                  value={editForm.admission_year}
-                  onChange={(e) => handleChange('admission_year', e.target.value)}
-                  onBlur={() => handleBlur('admission_year')}
-                  className={`edit-input ${getFieldError('admission_year') ? 'error' : ''}`}
-                  placeholder="2024"
-                  min="1950"
-                  max="2030"
-                />
-                {getFieldError('admission_year') && <span className="field-error">{getFieldError('admission_year')}</span>}
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Information */}
-          <div className="edit-section">
-            <div className="edit-section-header">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h4>Additional Information</h4>
-            </div>
-            
-            <div className="edit-field">
-              <label>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Applicant Notes
-              </label>
-              <textarea
-                value={editForm.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                className="edit-textarea"
-                rows="4"
-                placeholder="Any additional information..."
-              />
-            </div>
-          </div>
+    <div className="edit-field">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        Course(s)
+        <span className="required">*</span>
+      </label>
+      <input
+        type="text"
+        value={editForm.course}
+        onChange={(e) => handleChange('course', e.target.value)}
+        onBlur={() => handleBlur('course')}
+        className={`edit-input ${getFieldError('course') ? 'error' : ''}`}
+        placeholder="Separate multiple courses with commas"
+      />
+      <small className="field-hint">Enter multiple courses separated by commas</small>
+      {getFieldError('course') && <span className="field-error">{getFieldError('course')}</span>}
+    </div>
+  </div>
+</div>
 
           {/* Status & Admin Notes */}
           {/* <div className="edit-section">
