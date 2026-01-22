@@ -528,6 +528,21 @@
   gap: 10px;
   transition: all 0.3s ease;
 }
+/* Add this near your .info-grid styles */
+.list-info-group {
+  grid-column: 1 / -1; /* Make the wrapper span all columns of the main grid */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Create two equal columns */
+  gap: 24px;
+}
+
+/* Add this to your Mobile (max-width: 768px) media query */
+@media (max-width: 768px) {
+  .list-info-group {
+    grid-template-columns: 1fr; /* Stack them vertically on mobile */
+    gap: 18px;
+  }
+}
 
 .info-item.full-width {
   grid-column: 1 / -1;

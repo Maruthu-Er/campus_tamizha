@@ -40,12 +40,14 @@ const AdminLoginPage = ({ onLogin }) => {
       const data = await response.json()
 
       if (response.ok && data.access_token) {
-        onLogin({
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-          tokenType: data.token_type,
-        })
-      } else {
+  setPassword(""); // 🔒 clear from memory
+  onLogin({
+    accessToken: data.access_token,
+    refreshToken: data.refresh_token,
+    tokenType: data.token_type,
+  });
+}
+ else {
         setErrors({ form: data.detail || data.message || "Login failed" })
       }
     } catch (err) {
@@ -63,8 +65,8 @@ const AdminLoginPage = ({ onLogin }) => {
         <div className="admin-login-left-content">
           <h2>Campus Tamizha</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
-            dolore magna aliquam erat volutpat.
+            Log in to access the Campus Tamizha administrative dashboard.
+Manage college listings, student applications, enquiries, and platform content securely from one place.
           </p>
         </div>
       </div>

@@ -269,7 +269,7 @@ const ApplicationDetailPage = ({ darkMode, authToken }) => {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="btn-text">View History</span>
+              <span className="btn-text">Status History</span>
             </button>
             <button className="action-btn status-btn" onClick={() => setShowStatusModal(true)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -307,7 +307,8 @@ const ApplicationDetailPage = ({ darkMode, authToken }) => {
           </div>
 
           {/* Education Background */}
-         <div className="info-section">
+        {/* Education Background */}
+<div className="info-section">
   <div className="section-header">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -321,16 +322,21 @@ const ApplicationDetailPage = ({ darkMode, authToken }) => {
     <InfoItem icon={<LocationIcon />} label="District" value={application.district} />
     <InfoItem icon={<PercentIcon />} label="SSLC Percentage" value={`${application.sslc_percentage}%`} />
     <InfoItem icon={<PercentIcon />} label="HSC Percentage" value={`${application.hsc_percentage}%`} />
-    <ListInfoItem 
-      icon={<CollegeIcon />} 
-      label="Colleges" 
-      items={application.college || []} 
-    />
-    <ListInfoItem 
-      icon={<CourseIcon />} 
-      label="Courses" 
-      items={application.course || []} 
-    />
+    
+    {/* NEW WRAPPER START */}
+    <div className="list-info-group">
+      <ListInfoItem 
+        icon={<CollegeIcon />} 
+        label="Colleges" 
+        items={application.college || []} 
+      />
+      <ListInfoItem 
+        icon={<CourseIcon />} 
+        label="Courses" 
+        items={application.course || []} 
+      />
+    </div>
+    
   </div>
 </div>
 

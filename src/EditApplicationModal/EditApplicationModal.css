@@ -234,12 +234,6 @@
 .edit-section {
   margin-bottom: 40px;
   padding-bottom: 32px;
-  /* border-bottom: 2px solid; */
-  border-image: linear-gradient(
-    90deg,
-    var(--bg-gradient-start),
-    transparent
-  ) 1;
   animation: fadeIn 0.6s ease;
 }
 
@@ -292,6 +286,7 @@
   flex-direction: column;
   gap: 10px;
   animation: fadeIn 0.6s ease;
+  position: relative;
 }
 
 .edit-field label {
@@ -378,7 +373,6 @@
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
 }
 
-
 /* Container for the input and the absolute dropdown */
 .searchable-container {
   position: relative;
@@ -429,11 +423,6 @@
   border-radius: 10px;
 }
 
-/* Ensure the field doesn't overlap other elements */
-.edit-field {
-  position: relative;
-}
-
 /* ========== SELECT WRAPPER ========== */
 .select-wrapper {
   position: relative;
@@ -442,7 +431,7 @@
 .select-wrapper select {
   appearance: none;
   padding-right: 50px;
-  margin-bottom:1rem ;
+  margin-bottom: 1rem;
   cursor: pointer;
 }
 
@@ -468,6 +457,232 @@
   color: var(--brand-primary);
 }
 
+/* ========== DROPDOWN STYLES ========== */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-display {
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 45px 12px 20px;
+  border: 2px solid var(--input-border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dropdown-display:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-display.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  animation: shake 0.4s ease;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-display:hover .dropdown-arrow {
+  color: var(--brand-primary);
+}
+
+.selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+
+.selected-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+  color: var(--brand-primary);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1.5px solid rgba(99, 102, 241, 0.3);
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.remove-tag:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: scale(1.1);
+}
+
+.placeholder {
+  color: var(--input-placeholder);
+  font-weight: 500;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 2px solid var(--brand-primary);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-out;
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-search {
+  padding: 12px;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+  background: var(--bg-secondary);
+}
+
+.search-input {
+  width: 100%;
+  /* padding: 10px 16px; */
+  border: 2px solid var(--input-border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.dropdown-list {
+  overflow-y: auto;
+  max-height: 260px;
+  padding: 8px;
+}
+
+.dropdown-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 10px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.dropdown-item:hover:not(.disabled) {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.dropdown-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown-item input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--brand-primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  /* background: var(--bg-primary); */
+}
+
+.dropdown-item input[type="checkbox"]:checked + .checkbox-custom {
+  /* background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-mid)); */
+  border-color: var(--brand-primary);
+}
+
+.checkbox-custom svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+  color: white;
+}
+
+.item-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dropdown-limit-message {
+  padding: 12px 16px;
+  background: rgba(234, 179, 8, 0.1);
+  border-top: 2px solid rgba(234, 179, 8, 0.2);
+  color: rgb(161, 98, 7);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ========== TEXTAREA ========== */
 .edit-textarea {
   resize: vertical;
@@ -490,6 +705,14 @@
 .field-error::before {
   content: '⚠';
   font-size: 14px;
+}
+
+/* ========== FIELD HINT ========== */
+.field-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-style: italic;
 }
 
 /* ========== MODAL FOOTER ========== */
@@ -698,11 +921,137 @@
     padding: 14px 24px;
     font-size: 15px;
   }
+
+  .selected-tag {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
 }
 
 /* ========== DARK MODE SUPPORT ========== */
 @media (prefers-color-scheme: dark) {
   .edit-modal-overlay {
     background: rgba(0, 0, 0, 0.85);
+  }
+}
+
+
+
+/* ===============================
+   COLLEGE & COURSE ALIGNMENT FIX
+================================ */
+
+/* Make College & Course span full row */
+.edit-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Dropdown container alignment */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Match input height */
+.dropdown-display {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 2px solid var(--input-border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover & focus */
+.dropdown-display:hover {
+  border-color: var(--brand-primary);
+}
+
+.dropdown-display.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
+
+/* Selected tags wrap nicely */
+.selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tag style */
+.selected-tag {
+  background: var(--brand-primary);
+  color: var(--text-white);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remove-tag {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Dropdown menu width fix */
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: var(--bg-primary);
+  border-radius: 14px;
+  border: 2px solid var(--input-border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+}
+/* Make College & Course span the full width of the grid */
+.edit-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Ensure the selected tags and the input area utilize the full width */
+.dropdown-container {
+  width: 100%;
+}
+
+/* Align selected items horizontally with wrapping */
+.selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row; /* Aligns items horizontally */
+  gap: 8px;
+  align-items: center;
+}
+
+/* Ensure the dropdown display expands correctly */
+.dropdown-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 56px;
+}
+
+/* Adjust tag layout for better horizontal flow */
+.selected-tag {
+  white-space: nowrap; /* Keeps tag text on one line */
+  max-width: fit-content;
+}
+
+/* Mobile responsive check */
+@media (max-width: 768px) {
+  .edit-field.full-width {
+    grid-column: auto; /* Reverts to normal stack on small screens */
   }
 }

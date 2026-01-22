@@ -1,3 +1,4 @@
+
 /* ============= ApplicationListPage.css ============= */
 
 .list-page {
@@ -61,6 +62,13 @@
   font-weight: 500;
 }
 
+.refresh-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
 .refresh-button {
   display: flex;
   align-items: center;
@@ -89,6 +97,25 @@
 
 .refresh-button:active {
   transform: translateY(0);
+}
+
+.last-refresh {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.last-refresh svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 /* ===== STATS GRID ===== */
@@ -219,7 +246,6 @@
 .search-input:focus {
   outline: none;
   background: var(--bg-primary);
-  /* border-color: var(--brand-primary); */
   box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
@@ -231,6 +257,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.clear-search-button {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+}
+
+.clear-search-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.clear-search-button:hover {
+  background: var(--input-border);
+  color: var(--text-primary);
+}
+
+.clear-search-button:active {
+  transform: translateY(-50%) scale(0.9);
 }
 
 .search-spinner {
@@ -309,11 +368,105 @@
   align-items: flex-end;
 }
 
+/* Container to prevent layout shift */
+.date-filters-group-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+/* Row for the two inputs */
+.date-inputs-row {
+  display: flex;
+  gap: 16px;
+}
+
+/* Instruction Message Styling */
+.date-range-hint {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--brand-primary);
+  border-radius: 8px;
+  color: var(--brand-primary);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideInDown 0.3s ease-out;
+  white-space: nowrap;
+}
+
+.date-range-hint svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Pulsing effect for the missing field */
+.required-glow {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 3px var(--input-focus-shadow) !important;
+  animation: pulseBrand 2s infinite;
+}
+
+@keyframes pulseBrand {
+  0% { box-shadow: 0 0 0 0px var(--input-focus-shadow); }
+  70% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0px rgba(99, 102, 241, 0); }
+}
+
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Clear Dates Button alignment adjustment */
+.clear-dates-button {
+  height: 48px;
+  align-self: flex-end;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .date-inputs-row {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .date-filters-group-wrapper {
+    width: 100%;
+  }
+
+  .date-range-hint {
+    position: static; /* Flow naturally on mobile to avoid overlapping table */
+    margin-top: 4px;
+    white-space: normal;
+  }
+}
+
 .filter-item {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 180px;
+}
+
+.location-filter-item {
+  position: relative;
+}
+
+.location-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
 }
 
 .filter-item label {
@@ -358,8 +511,350 @@
 .filter-item select:focus,
 .filter-input:focus {
   outline: none;
-  /* border-color: var(--brand-primary); */
   box-shadow: 0 0 0 3px var(--input-focus-shadow); 
+}
+
+
+
+/* Add these styles to your ApplicationListPage.css */
+
+/* Location Dropdown Specific Styles */
+.location-menu {
+  min-width: 300px;
+}
+
+.search-wrapper-in-dropdown {
+  position: relative;
+  padding: 8px;
+  border-bottom: 1px solid var(--input-border);
+  margin-bottom: 4px;
+}
+
+.search-icon-small {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--input-placeholder);
+  pointer-events: none;
+}
+
+.search-input-dropdown {
+  width: 100%;
+  height: 36px;
+  padding: 0 40px 0 40px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.search-input-dropdown::placeholder {
+  color: var(--input-placeholder);
+}
+
+.search-input-dropdown:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  background: var(--bg-primary);
+}
+
+.search-loading-small {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.location-suggestions-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.no-results {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.no-results svg {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 8px;
+  opacity: 0.5;
+}
+
+.no-results p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.clear-location-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 10px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clear-location-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.clear-location-button:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Scrollbar for location list */
+.location-suggestions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.location-suggestions-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.location-suggestions-list::-webkit-scrollbar-thumb {
+  background: var(--input-border);
+  border-radius: 3px;
+}
+
+.location-suggestions-list::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .location-menu {
+    min-width: 100%;
+  }
+  
+  .search-input-dropdown {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input-dropdown {
+    font-size: 13px;
+  }
+  
+  .clear-location-button {
+    padding: 12px;
+    font-size: 12px;
+  }
+}
+
+
+
+/* ===== MODERN CUSTOM DROPDOWN (NO SELECT TAG) ===== */
+
+.modern-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.modern-dropdown-trigger {
+  width: 100%;
+  height: 48px;
+  padding: 0 48px 0 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.modern-dropdown-trigger:hover {
+  border-color: var(--brand-primary);
+  background: var(--bg-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.modern-dropdown-trigger:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.dropdown-icon {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropdown-label {
+  flex: 1;
+  text-align: left;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.dropdown-arrow.open {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--brand-primary);
+}
+
+.modern-dropdown-trigger:hover .dropdown-arrow {
+  color: var(--brand-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.modern-dropdown-trigger:hover .dropdown-arrow.open {
+  transform: translateY(-50%) rotate(180deg) scale(1.1);
+}
+
+/* Dropdown Menu */
+.modern-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  animation: dropdownFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+}
+
+.option-icon {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.option-label {
+  flex: 1;
+}
+
+.check-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--brand-primary);
+  flex-shrink: 0;
+}
+
+.dropdown-option:hover {
+  background: var(--input-bg);
+  transform: translateX(4px);
+}
+
+.dropdown-option.selected {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-mid));
+  color: var(--text-white);
+}
+
+.dropdown-option.selected .option-icon,
+.dropdown-option.selected .check-icon {
+  color: var(--text-white);
+}
+
+.dropdown-option.selected:hover {
+  background: linear-gradient(135deg, var(--bg-gradient-mid), var(--bg-gradient-end));
+  transform: translateX(4px);
+}
+
+.apply-dates-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  height: 48px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: var(--text-white);
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.apply-dates-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.apply-dates-button:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.apply-dates-button:active {
+  transform: translateY(0);
 }
 
 .clear-dates-button {
@@ -742,9 +1237,56 @@
   color: var(--text-secondary);
 }
 
+/* ===== STAT CARD ANIMATIONS ===== */
+
+.stats-grid {
+  animation: statsEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards;
+}
+
+@keyframes statsEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card:nth-child(1) {
+  animation: statCardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards;
+}
+
+.stat-card:nth-child(2) {
+  animation: statCardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+}
+
+.stat-card:nth-child(3) {
+  animation: statCardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
+}
+
+.stat-card:nth-child(4) {
+  animation: statCardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+}
+
+.stat-card:nth-child(5) {
+  animation: statCardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
+}
+
+@keyframes statCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* ========== RESPONSIVE DESIGN ========== */
 
-/* ========== TABLET (1024px and below) ========== */
 @media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -763,7 +1305,6 @@
   }
 }
 
-/* ========== TABLET (768px and below) ========== */
 @media (max-width: 768px) {
   .list-page {
     padding: 0;
@@ -787,11 +1328,26 @@
   .page-subtitle {
     font-size: 14px;
   }
+
+  .refresh-section {
+    align-items: center;
+    width: 100%;
+  }
   
   .refresh-button {
     width: 100%;
     justify-content: center;
     padding: 12px 20px;
+  }
+
+  .last-refresh {
+    font-size: 11px;
+    align-self: center;
+  }
+
+  .last-refresh svg {
+    width: 12px;
+    height: 12px;
   }
   
   .stats-grid {
@@ -848,6 +1404,37 @@
     width: 100%;
     justify-content: center;
   }
+
+  .apply-dates-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modern-dropdown-trigger {
+    height: 44px;
+    font-size: 13px;
+    padding: 0 44px 0 14px;
+  }
+
+  .dropdown-arrow {
+    right: 14px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .dropdown-option {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .option-icon {
+    font-size: 15px;
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+  }
   
   .table-wrapper {
     margin-bottom: 16px;
@@ -891,9 +1478,59 @@
   .pagination-info {
     order: -1;
   }
+  
+  /* Remove hover effects on mobile */
+  .stat-card:hover {
+    transform: none;
+  }
+  
+  .refresh-button:hover,
+  .action-button:hover,
+  .pagination-button:hover,
+  .clear-dates-button:hover,
+  .apply-dates-button:hover {
+    transform: none;
+  }
+  
+  /* Add active states for better touch feedback */
+  .stat-card:active {
+    transform: scale(0.98);
+  }
+  
+  .refresh-button:active,
+  .action-button:active,
+  .clear-dates-button:active,
+  .apply-dates-button:active {
+    transform: scale(0.95);
+  }
+  
+  .pagination-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  .modern-table tbody tr:hover {
+    transform: none;
+  }
+  
+  .modern-table tbody tr:active {
+    background: var(--input-bg);
+  }
+  
+  /* Better touch targets */
+  .suggestions-dropdown li {
+    padding: 14px;
+    font-size: 14px;
+  }
+  
+  .suggestions-dropdown li:hover {
+    transform: none;
+  }
+  
+  .suggestions-dropdown li:active {
+    background: var(--input-bg);
+  }
 }
 
-/* ========== MOBILE (480px and below) ========== */
 @media (max-width: 480px) {
   .page-header-section {
     padding: 16px;
@@ -917,6 +1554,15 @@
   .refresh-button svg {
     width: 16px;
     height: 16px;
+  }
+
+  .last-refresh {
+    font-size: 10px;
+  }
+
+  .last-refresh svg {
+    width: 11px;
+    height: 11px;
   }
   
   .stats-grid {
@@ -964,6 +1610,37 @@
   
   .filter-item label {
     font-size: 11px;
+  }
+
+  .modern-dropdown-trigger {
+    font-size: 12px;
+    padding: 0 40px 0 12px;
+  }
+
+  .dropdown-arrow {
+    right: 12px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .dropdown-icon {
+    font-size: 14px;
+    width: 18px;
+  }
+
+  .dropdown-option {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .option-icon {
+    font-size: 14px;
+    width: 18px;
+  }
+
+  .check-icon {
+    width: 15px;
+    height: 15px;
   }
   
   .table-wrapper {
@@ -1056,238 +1733,12 @@
   }
 }
 
-/* ========== EXTRA SMALL MOBILE (360px and below) ========== */
-@media (max-width: 360px) {
-  .page-header-section {
-    padding: 14px;
-  }
-  
-  .page-title {
-    font-size: 18px;
-  }
-  
-  .page-subtitle {
-    font-size: 12px;
-  }
-  
-  .refresh-button {
-    padding: 8px 14px;
-    font-size: 12px;
-  }
-  
-  .stat-card {
-    padding: 12px;
-    gap: 12px;
-  }
-  
-  .stat-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .stat-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .stat-value {
-    font-size: 22px;
-  }
-  
-  .controls-panel {
-    padding: 14px;
-    gap: 10px;
-  }
-  
-  .search-input,
-  .filter-input,
-  .filter-item select,
-  .clear-dates-button {
-    height: 42px;
-    font-size: 12px;
-  }
-  
-  .search-icon {
-    width: 18px;
-    height: 18px;
-    left: 14px;
-  }
-  
-  .search-input {
-    padding: 0 14px 0 44px;
-  }
-  
-  .filter-item label {
-    font-size: 10px;
-  }
-  
-  .filter-item label svg {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .clear-dates-button svg {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .modern-table {
-    min-width: 700px;
-  }
-  
-  .modern-table th {
-    padding: 10px 8px;
-    font-size: 11px;
-  }
-  
-  .modern-table td {
-    padding: 10px 8px;
-    font-size: 11px;
-  }
-  
-  .applicant-cell {
-    min-width: 160px;
-  }
-  
-  .applicant-info {
-    gap: 10px;
-  }
-  
-  .avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 11px;
-  }
-  
-  .applicant-name {
-    font-size: 11px;
-  }
-  
-  .applicant-email {
-    font-size: 9px;
-  }
-  
-  .location-cell svg {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .status-tag {
-    padding: 3px 8px;
-    font-size: 10px;
-  }
-  
-  .status-icon {
-    font-size: 12px;
-  }
-  
-  .action-button {
-    padding: 5px 10px;
-    font-size: 11px;
-  }
-  
-  .action-button svg {
-    width: 12px;
-    height: 12px;
-  }
-  
-  .pagination-button {
-    padding: 7px 14px;
-    font-size: 12px;
-  }
-  
-  .pagination-button svg {
-    width: 12px;
-    height: 12px;
-  }
-  
-  .current-page {
-    font-size: 14px;
-  }
-  
-  .page-separator,
-  .total-pages {
-    font-size: 12px;
-  }
-  
-  .spinner-ring {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .loading-container p {
-    font-size: 14px;
-  }
-  
-  .empty-container svg {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .empty-container h3 {
-    font-size: 16px;
-  }
-  
-  .empty-container p {
-    font-size: 13px;
-  }
-}
-
-/* ========== TOUCH IMPROVEMENTS FOR MOBILE ========== */
-@media (max-width: 768px) {
-  /* Remove hover effects on mobile */
-  .stat-card:hover {
-    transform: none;
-  }
-  
-  .refresh-button:hover,
-  .action-button:hover,
-  .pagination-button:hover,
-  .clear-dates-button:hover {
-    transform: none;
-  }
-  
-  /* Add active states for better touch feedback */
-  .stat-card:active {
-    transform: scale(0.98);
-  }
-  
-  .refresh-button:active,
-  .action-button:active,
-  .clear-dates-button:active {
-    transform: scale(0.95);
-  }
-  
-  .pagination-button:active:not(:disabled) {
-    transform: scale(0.95);
-  }
-  
-  .modern-table tbody tr:hover {
-    transform: none;
-  }
-  
-  .modern-table tbody tr:active {
-    background: var(--input-bg);
-  }
-  
-  /* Better touch targets */
-  .suggestions-dropdown li {
-    padding: 14px;
-    font-size: 14px;
-  }
-  
-  .suggestions-dropdown li:hover {
-    transform: none;
-  }
-  
-  .suggestions-dropdown li:active {
-    background: var(--input-bg);
-  }
-}
-
 /* ========== SCROLLBAR STYLING ========== */
-.table-wrapper::-webkit-scrollbar {
+.table-wrapper::-webkit-scrollbar,
+.modern-dropdown-menu::-webkit-scrollbar,
+.suggestions-dropdown::-webkit-scrollbar {
   height: 8px;
+  width: 6px;
 }
 
 .table-wrapper::-webkit-scrollbar-track {
@@ -1304,19 +1755,18 @@
   background: var(--brand-primary);
 }
 
-.suggestions-dropdown::-webkit-scrollbar {
-  width: 6px;
-}
-
+.modern-dropdown-menu::-webkit-scrollbar-track,
 .suggestions-dropdown::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.modern-dropdown-menu::-webkit-scrollbar-thumb,
 .suggestions-dropdown::-webkit-scrollbar-thumb {
   background: var(--input-border);
   border-radius: 3px;
 }
 
+.modern-dropdown-menu::-webkit-scrollbar-thumb:hover,
 .suggestions-dropdown::-webkit-scrollbar-thumb:hover {
   background: var(--brand-primary);
 }
@@ -1335,7 +1785,8 @@
 /* Focus visible for keyboard navigation */
 .search-input:focus-visible,
 .filter-input:focus-visible,
-.filter-item select:focus-visible {
+.filter-item select:focus-visible,
+.modern-dropdown-trigger:focus-visible {
   outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
 }
@@ -1353,6 +1804,11 @@
   outline-offset: -2px;
 }
 
+.dropdown-option:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+
 /* ========== PRINT STYLES ========== */
 @media print {
   .page-header-section,
@@ -1363,7 +1819,10 @@
   
   .refresh-button,
   .action-button,
-  .clear-dates-button {
+  .clear-dates-button,
+  .last-refresh,
+  .dropdown-arrow,
+  .modern-dropdown-menu {
     display: none;
   }
   
@@ -1378,4 +1837,31 @@
   .table-wrapper {
     overflow: visible;
   }
+
+  .modern-dropdown-trigger {
+    border: 1px solid #000;
+  }
 }
+
+
+
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:active {
+  transform: translateY(0px);
+}
+
+/* Optional: Highlight the card that matches the current filter */
+.stat-card.active-filter {
+  border: 2px solid var(--bg-gradient-start); /* Adjust color to your theme */
+  background-color: rgba(59, 131, 246, 0);
+}
+
+
