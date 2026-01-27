@@ -293,11 +293,27 @@
 @media (max-width: 768px) {
   .admin-login-wrapper {
     flex-direction: column;
+     min-height: 100dvh; 
+    background: 
+      linear-gradient(135deg, rgba(99, 102, 241, 0.50) 0%, rgba(168, 85, 247, 0.50) 50%, rgba(236, 72, 153, 0.50) 100%),
+      url('https://www.adlee.io/images/vectors2.png') center/cover no-repeat;
   }
 
   .admin-login-left {
-    min-height: 300px;
-    padding: 30px 20px;
+    min-height: auto;
+    padding: 40px 20px 20px 20px;
+    background: transparent;
+    flex: none;
+  }
+
+  .admin-login-left-content {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .admin-login-logo {
+    justify-content: center;
+    margin-bottom: 20px;
   }
 
   .admin-login-logo img {
@@ -310,21 +326,83 @@
 
   .admin-login-left p {
     font-size: 14px;
+    margin-bottom: 20px;
   }
 
   .admin-login-right {
-    padding: 30px 20px;
+    padding: 0 20px;
+    margin: 0;
+    background: transparent;
   }
 
   .admin-login-card {
-    max-width: 100%;
+    max-width: 450px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 30px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Make header text white on mobile */
+  .admin-login-header {
+    margin-bottom: 30px;
+  }
+
+  .admin-login-header h3 {
+    color: #ffffff;
+  }
+
+  /* Make input backgrounds semi-transparent on mobile */
+  .admin-login-form-input {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+  }
+
+  .admin-login-form-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .admin-login-form-input:focus {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  /* Make icons visible on mobile with better contrast */
+  .admin-login-input-icon {
+    color: var(--input-icon);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+
+  .admin-login-eye-icon {
+    color: gray;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+
+  .admin-login-eye-icon:hover {
+    color: black;
+  }
+
+  /* Error text adjustments for mobile */
+  .admin-login-error-text {
+    color: #ffe5e5;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .admin-login-error-banner {
+    background: rgba(239, 68, 68, 0.3);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
   }
 }
 
 @media (max-width: 480px) {
   .admin-login-left {
-    min-height: 250px;
-    padding: 20px;
+    padding: 30px 20px 15px 20px;
   }
 
   .admin-login-logo img {
@@ -332,7 +410,7 @@
   }
 
   .admin-login-logo {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
 
   .admin-login-left h2 {
@@ -341,10 +419,20 @@
 
   .admin-login-left p {
     font-size: 13px;
+    margin-bottom: 15px;
   }
 
   .admin-login-right {
-    padding: 20px;
+    padding: 0px 20px 30px 20px;
+  }
+
+  .admin-login-card {
+    padding: 25px 18px;
+    border-radius: 20px;
+  }
+
+  .admin-login-header {
+    margin-bottom: 25px;
   }
 
   .admin-login-header h3 {
