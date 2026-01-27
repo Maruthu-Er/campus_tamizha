@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import './AdminLoginPage.css';
+import CampusTamilaLogo from '../assets/logo/campus-tamila-white.svg'; // Import the logo
 
 const AdminLoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("")
@@ -40,14 +41,13 @@ const AdminLoginPage = ({ onLogin }) => {
       const data = await response.json()
 
       if (response.ok && data.access_token) {
-  setPassword(""); // 🔒 clear from memory
-  onLogin({
-    accessToken: data.access_token,
-    refreshToken: data.refresh_token,
-    tokenType: data.token_type,
-  });
-}
- else {
+        setPassword(""); // 🔒 clear from memory
+        onLogin({
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          tokenType: data.token_type,
+        });
+      } else {
         setErrors({ form: data.detail || data.message || "Login failed" })
       }
     } catch (err) {
@@ -63,10 +63,15 @@ const AdminLoginPage = ({ onLogin }) => {
       {/* Left side - Gradient background with content */}
       <div className="admin-login-left">
         <div className="admin-login-left-content">
-          <h2>Campus Tamizha</h2>
+          {/* Logo Section */}
+          <div className="admin-login-logo">
+            <img src={CampusTamilaLogo} alt="Campus Tamizha Logo" />
+          </div>
+          
+          {/* <h2>Campus Thamizha</h2> */}
           <p>
             Log in to access the Campus Tamizha administrative dashboard.
-Manage college listings, student applications, enquiries, and platform content securely from one place.
+            Manage college listings, student applications, enquiries, and platform content securely from one place.
           </p>
         </div>
       </div>

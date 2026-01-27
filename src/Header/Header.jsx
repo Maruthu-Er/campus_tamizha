@@ -1,5 +1,7 @@
 // ============= Header.jsx =============
 import './Header.css';
+import CampusTamilaLogoColored from '../assets/logo/campus-tamila_colour.svg';
+import CampusTamilaLogoWhite from '../assets/logo/campus-tamila-white.svg';
 
 const Header = ({ onLogout, darkMode, toggleDarkMode, onMenuToggle, mobileMenuOpen }) => {
   return (
@@ -25,13 +27,12 @@ const Header = ({ onLogout, darkMode, toggleDarkMode, onMenuToggle, mobileMenuOp
         </button>
 
         <div className="logo">
-          <div className="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <h1 className="logo-text">Campus Tamizha</h1>
+          {/* Show white logo in dark mode, colored logo in light mode */}
+          <img 
+            src={darkMode ? CampusTamilaLogoWhite : CampusTamilaLogoColored} 
+            alt="Campus Tamizha" 
+            className="logo-image" 
+          />
         </div>
       </div>
       

@@ -77,60 +77,50 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
+/* ========== LOGO WITH IMAGE ========== */
 .logo {
   display: flex;
   align-items: center;
-  gap: 14px;
   cursor: pointer;
   transition: transform 0.3s ease;
+  padding: 8px 0;
 }
 
 .logo:hover {
   transform: scale(1.02);
 }
 
-.logo-icon {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start) 0%,
-    var(--bg-gradient-mid) 50%,
-    var(--bg-gradient-end) 100%
-  );
-  color: white;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.25);
-  transition: all 0.3s ease;
+.logo-image {
+  height: 50px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  transition: all 0.3s ease, opacity 0.3s ease;
 }
 
-.logo-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.logo:hover .logo-icon {
-  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4);
+.logo:hover .logo-image {
   transform: translateY(-2px);
+  filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.2));
 }
 
-.logo-text {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start) 0%,
-    var(--bg-gradient-mid) 50%,
-    var(--bg-gradient-end) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
+/* Smooth transition when switching between logos */
+[data-theme="dark"] .logo-image {
+  animation: logoFadeIn 0.4s ease-in-out;
+}
+
+[data-theme="light"] .logo-image {
+  animation: logoFadeIn 0.4s ease-in-out;
+}
+
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .header-right {
@@ -316,8 +306,9 @@
     display: none;
   }
 
-  .logo-text {
-    font-size: 20px;
+  .logo-image {
+    height: 36px;
+    max-width: 180px;
   }
 
   .header-right {
@@ -336,18 +327,9 @@
     display: flex;
   }
   
-  .logo-text {
-    font-size: 18px;
-  }
-
-  .logo-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo-icon svg {
-    width: 20px;
-    height: 20px;
+  .logo-image {
+    height: 32px;
+    max-width: 160px;
   }
   
   .user-name {
@@ -411,13 +393,9 @@
     gap: 12px;
   }
 
-  .logo-text {
-    display: none;
-  }
-
-  .logo-icon {
-    width: 38px;
-    height: 38px;
+  .logo-image {
+    height: 28px;
+    max-width: 140px;
   }
   
   .notification-btn {
@@ -478,14 +456,9 @@
     height: 20px;
   }
 
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logo-icon svg {
-    width: 18px;
-    height: 18px;
+  .logo-image {
+    height: 26px;
+    max-width: 120px;
   }
 
   .header-right {
