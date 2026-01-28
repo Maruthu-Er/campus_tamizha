@@ -1,4 +1,3 @@
-
 /* ============= ApplicationListPage.css ============= */
 
 .list-page {
@@ -12,6 +11,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -325,6 +325,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -416,14 +417,29 @@
 }
 
 @keyframes pulseBrand {
-  0% { box-shadow: 0 0 0 0px var(--input-focus-shadow); }
-  70% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
-  100% { box-shadow: 0 0 0 0px rgba(99, 102, 241, 0); }
+  0% {
+    box-shadow: 0 0 0 0px var(--input-focus-shadow);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0px rgba(99, 102, 241, 0);
+  }
 }
 
 @keyframes slideInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Clear Dates Button alignment adjustment */
@@ -439,13 +455,14 @@
     gap: 12px;
     width: 100%;
   }
-  
+
   .date-filters-group-wrapper {
     width: 100%;
   }
 
   .date-range-hint {
-    position: static; /* Flow naturally on mobile to avoid overlapping table */
+    position: static;
+    /* Flow naturally on mobile to avoid overlapping table */
     margin-top: 4px;
     white-space: normal;
   }
@@ -511,7 +528,7 @@
 .filter-item select:focus,
 .filter-input:focus {
   outline: none;
-  box-shadow: 0 0 0 3px var(--input-focus-shadow); 
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
 
@@ -651,7 +668,7 @@
   .location-menu {
     min-width: 100%;
   }
-  
+
   .search-input-dropdown {
     height: 40px;
     font-size: 14px;
@@ -662,7 +679,7 @@
   .search-input-dropdown {
     font-size: 13px;
   }
-  
+
   .clear-location-button {
     padding: 12px;
     font-size: 12px;
@@ -1178,6 +1195,7 @@
   align-items: center;
   gap: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
 }
 
 .pagination-button {
@@ -1194,11 +1212,21 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px var(--shadow-hover);
+  white-space: nowrap;
 }
 
 .pagination-button svg {
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
+}
+
+.pagination-button.pagination-edge {
+  padding: 10px 14px;
+}
+
+.pagination-button.pagination-edge .button-text {
+  display: none;
 }
 
 .pagination-button:hover:not(:disabled) {
@@ -1211,8 +1239,67 @@
 }
 
 .pagination-button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Page Numbers Container */
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Individual Page Number Button */
+.pagination-number {
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 2px solid var(--input-border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pagination-number:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.pagination-number.active {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-mid));
+  color: var(--text-white);
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.pagination-number.active:hover {
+  transform: translateY(0);
+}
+
+/* Ellipsis */
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 40px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  user-select: none;
+  padding: 0 4px;
 }
 
 .pagination-info {
@@ -1237,6 +1324,19 @@
   color: var(--text-secondary);
 }
 
+/* Responsive visibility classes */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+.mobile-hidden {
+  display: flex;
+}
+
 /* ===== STAT CARD ANIMATIONS ===== */
 
 .stats-grid {
@@ -1248,6 +1348,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1279,6 +1380,7 @@
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1291,15 +1393,15 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .table-wrapper {
     overflow-x: auto;
   }
-  
+
   .modern-table {
     min-width: 900px;
   }
-  
+
   .filter-item {
     min-width: 160px;
   }
@@ -1309,22 +1411,22 @@
   .list-page {
     padding: 0;
   }
-  
+
   .page-header-section {
     padding: 20px;
     margin-bottom: 16px;
   }
-  
+
   .header-content {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
   }
-  
+
   .page-title {
     font-size: 24px;
   }
-  
+
   .page-subtitle {
     font-size: 14px;
   }
@@ -1333,7 +1435,7 @@
     align-items: center;
     width: 100%;
   }
-  
+
   .refresh-button {
     width: 100%;
     justify-content: center;
@@ -1349,57 +1451,57 @@
     width: 12px;
     height: 12px;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 16px;
   }
-  
+
   .stat-card {
     padding: 16px;
   }
-  
+
   .stat-icon {
     width: 48px;
     height: 48px;
   }
-  
+
   .stat-icon svg {
     width: 24px;
     height: 24px;
   }
-  
+
   .stat-value {
     font-size: 28px;
   }
-  
+
   .stat-label {
     font-size: 11px;
   }
-  
+
   .controls-panel {
     flex-direction: column;
     align-items: stretch;
     padding: 20px;
     margin-bottom: 16px;
   }
-  
+
   .search-container {
     min-width: 100%;
   }
-  
+
   .filters-group {
     width: 100%;
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .filter-item {
     width: 100%;
     min-width: 100%;
   }
-  
+
   .clear-dates-button {
     width: 100%;
     justify-content: center;
@@ -1435,97 +1537,108 @@
     width: 16px;
     height: 16px;
   }
-  
+
   .table-wrapper {
     margin-bottom: 16px;
   }
-  
+
   .modern-table th,
   .modern-table td {
     padding: 14px 12px;
     font-size: 13px;
   }
-  
+
   .applicant-cell {
     min-width: 200px;
   }
-  
+
   .avatar {
     width: 36px;
     height: 36px;
     font-size: 14px;
   }
-  
+
   .applicant-name {
     font-size: 13px;
   }
-  
+
   .applicant-email {
     font-size: 11px;
   }
-  
+
   .pagination-container {
-    flex-direction: column;
-    gap: 16px;
+    justify-content: center;
+    gap: 10px;
     padding: 16px;
   }
-  
-  .pagination-button {
-    width: 100%;
-    justify-content: center;
+
+  /* Hide Previous/Next buttons on mobile */
+  .pagination-button.mobile-hide {
+    display: none;
   }
-  
+
+  .pagination-numbers {
+    gap: 6px;
+  }
+
+  .pagination-number {
+    min-width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
   .pagination-info {
-    order: -1;
+    display: none;
   }
-  
+
   /* Remove hover effects on mobile */
   .stat-card:hover {
     transform: none;
   }
-  
+
   .refresh-button:hover,
   .action-button:hover,
   .pagination-button:hover,
+  .pagination-number:hover,
   .clear-dates-button:hover,
   .apply-dates-button:hover {
     transform: none;
   }
-  
+
   /* Add active states for better touch feedback */
   .stat-card:active {
     transform: scale(0.98);
   }
-  
+
   .refresh-button:active,
   .action-button:active,
   .clear-dates-button:active,
   .apply-dates-button:active {
     transform: scale(0.95);
   }
-  
+
   .pagination-button:active:not(:disabled) {
     transform: scale(0.95);
   }
-  
+
   .modern-table tbody tr:hover {
     transform: none;
   }
-  
+
   .modern-table tbody tr:active {
     background: var(--input-bg);
   }
-  
+
   /* Better touch targets */
   .suggestions-dropdown li {
     padding: 14px;
     font-size: 14px;
   }
-  
+
   .suggestions-dropdown li:hover {
     transform: none;
   }
-  
+
   .suggestions-dropdown li:active {
     background: var(--input-bg);
   }
@@ -1537,20 +1650,20 @@
     border-radius: 12px;
     margin-bottom: 12px;
   }
-  
+
   .page-title {
     font-size: 20px;
   }
-  
+
   .page-subtitle {
     font-size: 13px;
   }
-  
+
   .refresh-button {
     padding: 10px 16px;
     font-size: 13px;
   }
-  
+
   .refresh-button svg {
     width: 16px;
     height: 16px;
@@ -1564,42 +1677,42 @@
     width: 11px;
     height: 11px;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 12px;
   }
-  
+
   .stat-card {
     padding: 14px;
     gap: 14px;
   }
-  
+
   .stat-icon {
     width: 44px;
     height: 44px;
   }
-  
+
   .stat-icon svg {
     width: 22px;
     height: 22px;
   }
-  
+
   .stat-value {
     font-size: 24px;
   }
-  
+
   .stat-label {
     font-size: 10px;
   }
-  
+
   .controls-panel {
     padding: 16px;
     border-radius: 12px;
     margin-bottom: 12px;
   }
-  
+
   .search-input,
   .filter-input,
   .filter-item select,
@@ -1607,7 +1720,7 @@
     height: 44px;
     font-size: 13px;
   }
-  
+
   .filter-item label {
     font-size: 11px;
   }
@@ -1642,92 +1755,92 @@
     width: 15px;
     height: 15px;
   }
-  
+
   .table-wrapper {
     border-radius: 12px;
     margin-bottom: 12px;
   }
-  
+
   .modern-table {
     min-width: 750px;
   }
-  
+
   .modern-table th,
   .modern-table td {
     padding: 12px 10px;
     font-size: 12px;
   }
-  
+
   .id-cell {
     font-size: 11px;
   }
-  
+
   .applicant-cell {
     min-width: 180px;
   }
-  
+
   .avatar {
     width: 32px;
     height: 32px;
     font-size: 12px;
   }
-  
+
   .applicant-name {
     font-size: 12px;
   }
-  
+
   .applicant-email {
     font-size: 10px;
   }
-  
+
   .status-tag {
     padding: 4px 10px;
     font-size: 11px;
   }
-  
+
   .action-button {
     padding: 6px 12px;
     font-size: 12px;
   }
-  
+
   .action-button svg {
     width: 14px;
     height: 14px;
   }
-  
+
   .pagination-container {
     padding: 14px;
     border-radius: 12px;
   }
-  
+
   .pagination-button {
     padding: 8px 16px;
     font-size: 13px;
   }
-  
+
   .pagination-button svg {
     width: 14px;
     height: 14px;
   }
-  
+
   .current-page {
     font-size: 15px;
   }
-  
+
   .loading-container,
   .empty-container {
     padding: 60px 16px;
   }
-  
+
   .empty-container svg {
     width: 60px;
     height: 60px;
   }
-  
+
   .empty-container h3 {
     font-size: 18px;
   }
-  
+
   .empty-container p {
     font-size: 14px;
   }
@@ -1773,6 +1886,7 @@
 
 /* ========== ACCESSIBILITY IMPROVEMENTS ========== */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1811,12 +1925,13 @@
 
 /* ========== PRINT STYLES ========== */
 @media print {
+
   .page-header-section,
   .controls-panel,
   .pagination-container {
     box-shadow: none !important;
   }
-  
+
   .refresh-button,
   .action-button,
   .clear-dates-button,
@@ -1825,15 +1940,15 @@
   .modern-dropdown-menu {
     display: none;
   }
-  
+
   .modern-table tbody tr:hover {
     background: transparent;
   }
-  
+
   .stat-card {
     break-inside: avoid;
   }
-  
+
   .table-wrapper {
     overflow: visible;
   }
@@ -1860,8 +1975,7 @@
 
 /* Optional: Highlight the card that matches the current filter */
 .stat-card.active-filter {
-  border: 2px solid var(--bg-gradient-start); /* Adjust color to your theme */
+  border: 2px solid var(--bg-gradient-start);
+  /* Adjust color to your theme */
   background-color: rgba(59, 131, 246, 0);
 }
-
-

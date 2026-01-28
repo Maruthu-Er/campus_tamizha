@@ -904,29 +904,94 @@ const ApplicationListPage = ({ authToken }) => {
 
           {totalPages > 1 && (
             <div className="pagination-container">
+              {/* Previous Button - Hidden on mobile */}
               <button 
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="pagination-button"
+                className="pagination-button pagination-prev mobile-hide"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"/>
                 </svg>
-                Previous
+                <span className="button-text">Previous</span>
               </button>
               
-              <div className="pagination-info">
-                <span className="current-page">Page {currentPage}</span>
-                <span className="page-separator">of</span>
-                <span className="total-pages">{totalPages}</span>
+              {/* Page Numbers */}
+              <div className="pagination-numbers">
+                {(() => {
+                  const pages = [];
+                  const maxVisiblePages = 5;
+                  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                  
+                  if (endPage - startPage < maxVisiblePages - 1) {
+                    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                  }
+
+                  // First page + ellipsis
+                  if (startPage > 1) {
+                    pages.push(
+                      <button
+                        key={1}
+                        onClick={() => setCurrentPage(1)}
+                        className="pagination-number"
+                      >
+                        1
+                      </button>
+                    );
+                    if (startPage > 2) {
+                      pages.push(
+                        <span key="ellipsis-start" className="pagination-ellipsis">
+                          ...
+                        </span>
+                      );
+                    }
+                  }
+
+                  // Visible page numbers
+                  for (let i = startPage; i <= endPage; i++) {
+                    pages.push(
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(i)}
+                        className={`pagination-number ${currentPage === i ? 'active' : ''}`}
+                      >
+                        {i}
+                      </button>
+                    );
+                  }
+
+                  // Ellipsis + last page
+                  if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                      pages.push(
+                        <span key="ellipsis-end" className="pagination-ellipsis">
+                          ...
+                        </span>
+                      );
+                    }
+                    pages.push(
+                      <button
+                        key={totalPages}
+                        onClick={() => setCurrentPage(totalPages)}
+                        className="pagination-number"
+                      >
+                        {totalPages}
+                      </button>
+                    );
+                  }
+
+                  return pages;
+                })()}
               </div>
               
+              {/* Next Button - Hidden on mobile */}
               <button 
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="pagination-button"
+                className="pagination-button pagination-next mobile-hide"
               >
-                Next
+                <span className="button-text">Next</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>

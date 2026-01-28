@@ -6,6 +6,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -17,6 +18,7 @@
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -28,6 +30,7 @@
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -35,9 +38,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -54,6 +60,7 @@
     opacity: 0;
     backdrop-filter: blur(0px);
   }
+
   to {
     opacity: 1;
     backdrop-filter: blur(8px);
@@ -65,6 +72,7 @@
     opacity: 0;
     transform: translateY(50px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -116,12 +124,10 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid),
-    var(--bg-gradient-end)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid),
+      var(--bg-gradient-end));
   opacity: 0.2;
   filter: blur(20px);
   animation: pulse 2s ease-in-out infinite;
@@ -175,11 +181,9 @@
   align-items: center;
   gap: 10px;
   padding: 14px 32px;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid));
   color: var(--text-white);
   border: none;
   border-radius: 12px;
@@ -228,11 +232,9 @@
   align-items: center;
   gap: 10px;
   padding: 12px 24px;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid));
   color: var(--text-white);
   border: none;
   border-radius: 12px;
@@ -266,12 +268,10 @@
 .header-info h1 {
   font-size: 28px;
   font-weight: 800;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid),
-    var(--bg-gradient-end)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid),
+      var(--bg-gradient-end));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -345,12 +345,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.05) 0%,
-    rgba(168, 85, 247, 0.05) 50%,
-    rgba(236, 72, 153, 0.05) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.05) 0%,
+      rgba(168, 85, 247, 0.05) 50%,
+      rgba(236, 72, 153, 0.05) 100%);
   border-bottom: 2px solid rgba(99, 102, 241, 0.1);
   gap: 24px;
   flex-wrap: wrap;
@@ -366,12 +364,10 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid),
-    var(--bg-gradient-end)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid),
+      var(--bg-gradient-end));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -493,12 +489,10 @@
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 3px solid;
-  border-image: linear-gradient(
-    90deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid),
-    transparent
-  ) 1;
+  border-image: linear-gradient(90deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid),
+      transparent) 1;
 }
 
 .section-header svg {
@@ -528,18 +522,22 @@
   gap: 10px;
   transition: all 0.3s ease;
 }
+
 /* Add this near your .info-grid styles */
 .list-info-group {
-  grid-column: 1 / -1; /* Make the wrapper span all columns of the main grid */
+  grid-column: 1 / -1;
+  /* Make the wrapper span all columns of the main grid */
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Create two equal columns */
+  grid-template-columns: 1fr 1fr;
+  /* Create two equal columns */
   gap: 24px;
 }
 
 /* Add this to your Mobile (max-width: 768px) media query */
 @media (max-width: 768px) {
   .list-info-group {
-    grid-template-columns: 1fr; /* Stack them vertically on mobile */
+    grid-template-columns: 1fr;
+    /* Stack them vertically on mobile */
     gap: 18px;
   }
 }
@@ -610,11 +608,9 @@
   display: inline-flex;
   align-items: center;
   padding: 8px 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.1) 0%,
-    rgba(168, 85, 247, 0.1) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.1) 0%,
+      rgba(168, 85, 247, 0.1) 100%);
   color: var(--text-primary);
   border: 2px solid rgba(99, 102, 241, 0.2);
   border-radius: 10px;
@@ -624,11 +620,9 @@
 }
 
 .list-item-badge:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.2) 0%,
-    rgba(168, 85, 247, 0.2) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.2) 0%,
+      rgba(168, 85, 247, 0.2) 100%);
   border-color: rgba(99, 102, 241, 0.4);
   transform: translateY(-2px);
 }
@@ -709,7 +703,9 @@
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
   animation: slideUpModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -721,11 +717,9 @@
   align-items: center;
   padding: 28px 32px;
   border-bottom: 2px solid rgba(99, 102, 241, 0.1);
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.05) 0%,
-    rgba(168, 85, 247, 0.05) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.05) 0%,
+      rgba(168, 85, 247, 0.05) 100%);
 }
 
 .modal-title {
@@ -776,6 +770,9 @@
 /* ========== MODAL BODY ========== */
 .modal-body {
   padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .form-group {
@@ -942,11 +939,9 @@
 }
 
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--bg-gradient-start),
-    var(--bg-gradient-mid)
-  );
+  background: linear-gradient(135deg,
+      var(--bg-gradient-start),
+      var(--bg-gradient-mid));
   color: white;
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
 }
@@ -990,6 +985,7 @@
 
 /* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+
   /* Page Header */
   .page-header-detail {
     flex-direction: column;
