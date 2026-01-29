@@ -94,7 +94,7 @@
   min-height: 60vh;
   background: var(--bg-primary);
   border-radius: 24px;
-  padding: 60px 40px;
+  padding: 40px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
@@ -149,7 +149,7 @@
   min-height: 60vh;
   background: var(--bg-primary);
   border-radius: 24px;
-  padding: 60px 40px;
+  padding: 40px;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -214,8 +214,8 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-bottom: 32px;
-  padding: 28px 36px;
+  margin-bottom: 24px;
+  padding: 20px 24px;
   background: var(--bg-primary);
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
@@ -266,7 +266,7 @@
 }
 
 .header-info h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   background: linear-gradient(135deg,
       var(--bg-gradient-start),
@@ -275,7 +275,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
@@ -344,13 +344,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 16px 24px;
   background: linear-gradient(135deg,
       rgba(99, 102, 241, 0.05) 0%,
       rgba(168, 85, 247, 0.05) 50%,
       rgba(236, 72, 153, 0.05) 100%);
   border-bottom: 2px solid rgba(99, 102, 241, 0.1);
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
@@ -361,8 +361,8 @@
 }
 
 .applicant-avatar {
-  width: 70px;
-  height: 70px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: linear-gradient(135deg,
       var(--bg-gradient-start),
@@ -371,7 +371,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
   color: white;
   box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
@@ -379,10 +379,10 @@
 }
 
 .title-info h2 {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
@@ -469,7 +469,7 @@
 
 /* ========== CARD BODY ========== */
 .card-body-detail {
-  padding: 40px;
+  padding: 24px;
 }
 
 /* ========== INFO SECTIONS ========== */
@@ -784,6 +784,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
+  margin-top: 12px;
   font-weight: 700;
   color: var(--text-secondary);
   font-size: 14px;

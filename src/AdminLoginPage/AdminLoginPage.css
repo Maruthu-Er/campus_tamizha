@@ -9,13 +9,13 @@
 /* ========== LEFT SIDE ========== */
 .admin-login-left {
   flex: 1;
-  background: 
+  background:
     linear-gradient(135deg, rgba(99, 102, 241, 0.50) 0%, rgba(168, 85, 247, 0.50) 50%, rgba(236, 72, 153, 0.50) 100%),
     url('https://www.adlee.io/images/vectors2.png') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 32px;
   position: relative;
   overflow: hidden;
 }
@@ -38,16 +38,17 @@
   max-width: 280px;
   height: auto;
   width: 100%;
-  filter: none; /* Keep white logo for gradient background */
+  filter: none;
+  /* Keep white logo for gradient background */
 }
 
 .admin-login-left-content h2 {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: 700;
   color: var(--text-white);
   position: relative;
   display: inline-block;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-transform: capitalize;
 }
 
@@ -161,7 +162,7 @@
 
 .admin-login-form-input {
   width: 100%;
-  padding: 14px 50px 14px 50px;
+  padding: 10px 48px 10px 48px;
   border: 1px solid var(--input-border);
   border-radius: 8px;
   background: var(--input-bg);
@@ -293,8 +294,8 @@
 @media (max-width: 768px) {
   .admin-login-wrapper {
     flex-direction: column;
-     min-height: 100dvh; 
-    background: 
+    min-height: 100dvh;
+    background:
       linear-gradient(135deg, rgba(99, 102, 241, 0.50) 0%, rgba(168, 85, 247, 0.50) 50%, rgba(236, 72, 153, 0.50) 100%),
       url('https://www.adlee.io/images/vectors2.png') center/cover no-repeat;
   }
